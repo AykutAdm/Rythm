@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using Rythm.Application.Features.Artists.Commands;
 using Rythm.Application.Features.Artists.DTOs;
 using Rythm.Domain.Entities;
 using System;
