@@ -15,11 +15,13 @@ namespace Rythm.Application.Features.Albums.Handlers
     {
         private readonly IUnitOfWork _unitOfWork;
         private readonly IMapper _mapper;
+        private readonly ICacheService _cacheService;
 
-        public CreateAlbumCommandHandler(IUnitOfWork unitOfWork, IMapper mapper)
+        public CreateAlbumCommandHandler(IUnitOfWork unitOfWork, IMapper mapper, ICacheService cacheService)
         {
             _unitOfWork = unitOfWork;
             _mapper = mapper;
+            _cacheService = cacheService;
         }
 
         public async Task Handle(CreateAlbumCommand request, CancellationToken cancellationToken)
@@ -28,6 +30,9 @@ namespace Rythm.Application.Features.Albums.Handlers
             value.CreatedAt = DateTime.Now;
             await _unitOfWork.Albums.AddAsync(value);
             await _unitOfWork.SaveChangesAsync();
+
+            //clear the cache after insertion
+            await _cacheService.RemoveAsync("albums_all");
         }
     }
 }

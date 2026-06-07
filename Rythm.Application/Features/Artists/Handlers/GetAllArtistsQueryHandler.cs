@@ -15,17 +15,35 @@ namespace Rythm.Application.Features.Artists.Handlers
     {
         private readonly IUnitOfWork _unitOfWork;
         private readonly IMapper _mapper;
+        private readonly ICacheService _cacheService;
+        private const string CacheKey = "artists_all";
 
-        public GetAllArtistsQueryHandler(IUnitOfWork unitOfWork, IMapper mapper)
+        public GetAllArtistsQueryHandler(IUnitOfWork unitOfWork, IMapper mapper, ICacheService cacheService)
         {
             _unitOfWork = unitOfWork;
             _mapper = mapper;
+            _cacheService = cacheService;
         }
 
         public async Task<List<ResultArtistDto>> Handle(GetAllArtistsQuery request, CancellationToken cancellationToken)
         {
+            // Check Redis first
+            var cachedArtists = await _cacheService.GetAsync<List<ResultArtistDto>>(CacheKey);
+
+            // If it exists in Redis, return it directly
+            if (cachedArtists != null)
+            {
+                return cachedArtists;
+            }
+
+            // If it's not in Redis, get it from the db
             var values = await _unitOfWork.Artists.GetAllAsync();
-            return _mapper.Map<List<ResultArtistDto>>(values);
+            var result= _mapper.Map<List<ResultArtistDto>>(values);
+
+            // Save what we retrieved from the database to Redis
+            await _cacheService.SetAsync(CacheKey, result, TimeSpan.FromMinutes(10));
+
+            return result;
         }
     }
 }

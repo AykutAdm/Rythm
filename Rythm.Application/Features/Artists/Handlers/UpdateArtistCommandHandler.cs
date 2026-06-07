@@ -14,11 +14,13 @@ namespace Rythm.Application.Features.Artists.Handlers
     {
         private readonly IUnitOfWork _unitOfWork;
         private readonly IMapper _mapper;
+        private readonly ICacheService _cacheService;
 
-        public UpdateArtistCommandHandler(IUnitOfWork unitOfWork, IMapper mapper)
+        public UpdateArtistCommandHandler(IUnitOfWork unitOfWork, IMapper mapper, ICacheService cacheService)
         {
             _unitOfWork = unitOfWork;
             _mapper = mapper;
+            _cacheService = cacheService;
         }
 
         public async Task Handle(UpdateArtistCommand request, CancellationToken cancellationToken)
@@ -27,6 +29,9 @@ namespace Rythm.Application.Features.Artists.Handlers
             _mapper.Map(request, value);
             await _unitOfWork.Artists.UpdateAsync(value);
             await _unitOfWork.SaveChangesAsync();
+
+            // The artist has been updated, clear the cache
+            await _cacheService.RemoveAsync("artists_all");
         }
     }
 }

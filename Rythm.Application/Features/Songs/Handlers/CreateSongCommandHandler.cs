@@ -15,11 +15,13 @@ namespace Rythm.Application.Features.Songs.Handlers
     {
         private readonly IUnitOfWork _unitOfWork;
         private readonly IMapper _mapper;
+        private readonly ICacheService _cacheService;
 
-        public CreateSongCommandHandler(IUnitOfWork unitOfWork, IMapper mapper)
+        public CreateSongCommandHandler(IUnitOfWork unitOfWork, IMapper mapper, ICacheService cacheService)
         {
             _unitOfWork = unitOfWork;
             _mapper = mapper;
+            _cacheService = cacheService;
         }
 
         public async Task Handle(CreateSongCommand request, CancellationToken cancellationToken)
@@ -28,6 +30,9 @@ namespace Rythm.Application.Features.Songs.Handlers
             value.CreatedAt = DateTime.UtcNow;
             await _unitOfWork.Songs.AddAsync(value);
             await _unitOfWork.SaveChangesAsync();
+
+            // New song added, clear cache
+            await _cacheService.RemoveAsync("songs_all");
         }
     }
 }

@@ -15,17 +15,35 @@ namespace Rythm.Application.Features.Genres.Handlers
     {
         private readonly IUnitOfWork _unitOfWork;
         private readonly IMapper _mapper;
+        private readonly ICacheService _cacheService;
+        private const string CacheKey = "genres_all";
 
-        public GetAllGenresQueryHandler(IUnitOfWork unitOfWork, IMapper mapper)
+        public GetAllGenresQueryHandler(IUnitOfWork unitOfWork, IMapper mapper, ICacheService cacheService)
         {
             _unitOfWork = unitOfWork;
             _mapper = mapper;
+            _cacheService = cacheService;
         }
 
         public async Task<List<ResultGenreDto>> Handle(GetAllGenresQuery request, CancellationToken cancellationToken)
         {
+            // Check Redis first
+            var cachedGenres = await _cacheService.GetAsync<List<ResultGenreDto>>(CacheKey);
+
+            // If it exists in Redis, return it directly
+            if (cachedGenres != null)
+            {
+                return cachedGenres;
+            }
+
+            // If it's not in Redis, get it from the db
             var values = await _unitOfWork.Genres.GetAllAsync();
-            return _mapper.Map<List<ResultGenreDto>>(values);
+            var result = _mapper.Map<List<ResultGenreDto>>(values);
+
+            // Save what we retrieved from the database to Redis
+            await _cacheService.SetAsync(CacheKey, result, TimeSpan.FromMinutes(10));
+
+            return result;
         }
     }
 }

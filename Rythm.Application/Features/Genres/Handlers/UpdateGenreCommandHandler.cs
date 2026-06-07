@@ -14,11 +14,13 @@ namespace Rythm.Application.Features.Genres.Handlers
     {
         private readonly IUnitOfWork _unitOfWork;
         private readonly IMapper _mapper;
+        private readonly ICacheService _cacheService;
 
-        public UpdateGenreCommandHandler(IUnitOfWork unitOfWork, IMapper mapper)
+        public UpdateGenreCommandHandler(IUnitOfWork unitOfWork, IMapper mapper, ICacheService cacheService)
         {
             _unitOfWork = unitOfWork;
             _mapper = mapper;
+            _cacheService = cacheService;
         }
 
         public async Task Handle(UpdateGenreCommand request, CancellationToken cancellationToken)
@@ -27,6 +29,10 @@ namespace Rythm.Application.Features.Genres.Handlers
             _mapper.Map(request, value);
             await _unitOfWork.Genres.UpdateAsync(value);
             await _unitOfWork.SaveChangesAsync();
+
+            //clear the cache after update
+            await _cacheService.RemoveAsync("genres_all");
+
         }
     }
 }

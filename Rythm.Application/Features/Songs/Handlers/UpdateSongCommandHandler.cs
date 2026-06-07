@@ -14,11 +14,13 @@ namespace Rythm.Application.Features.Songs.Handlers
     {
         private readonly IUnitOfWork _unitOfWork;
         private readonly IMapper _mapper;
+        private readonly ICacheService _cacheService;
 
-        public UpdateSongCommandHandler(IUnitOfWork unitOfWork, IMapper mapper)
+        public UpdateSongCommandHandler(IUnitOfWork unitOfWork, IMapper mapper, ICacheService cacheService)
         {
             _unitOfWork = unitOfWork;
             _mapper = mapper;
+            _cacheService = cacheService;
         }
 
         public async Task Handle(UpdateSongCommand request, CancellationToken cancellationToken)
@@ -27,6 +29,9 @@ namespace Rythm.Application.Features.Songs.Handlers
             _mapper.Map(request, value);
             await _unitOfWork.Songs.UpdateAsync(value);
             await _unitOfWork.SaveChangesAsync();
+
+            // The song has been updated, clear the cache
+            await _cacheService.RemoveAsync("songs_all");
         }
     }
 }
