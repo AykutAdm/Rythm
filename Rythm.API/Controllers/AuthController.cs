@@ -19,11 +19,7 @@ namespace Rythm.API.Controllers
         [HttpPost("register")]
         public async Task<IActionResult> Register(RegisterCommand command)
         {
-            var result = await _mediator.Send(command);
-            if (!result)
-            {
-                return BadRequest("Kayıt başarısız.");
-            }
+            await _mediator.Send(command);
             return Ok("Kayıt başarılı.");
         }
 

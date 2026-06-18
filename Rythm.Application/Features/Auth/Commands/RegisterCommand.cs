@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace Rythm.Application.Features.Auth.Commands
 {
-    public class RegisterCommand : IRequest<bool>
+    public class RegisterCommand : IRequest
     {
         public string FirstName { get; set; }
         public string LastName { get; set; }

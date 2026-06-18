@@ -13,17 +13,22 @@ namespace Rythm.Application.Features.Songs.Handlers
     {
         private readonly IUnitOfWork _unitOfWork;
         private readonly ICacheService _cacheService;
+        private readonly ISearchService _searchService;
 
-        public RemoveSongCommandHandler(IUnitOfWork unitOfWork, ICacheService cacheService)
+        public RemoveSongCommandHandler(IUnitOfWork unitOfWork, ICacheService cacheService, ISearchService searchService)
         {
             _unitOfWork = unitOfWork;
             _cacheService = cacheService;
+            _searchService = searchService;
         }
 
         public async Task Handle(RemoveSongCommand request, CancellationToken cancellationToken)
         {
             await _unitOfWork.Songs.DeleteAsync(request.Id);
             await _unitOfWork.SaveChangesAsync();
+
+            //remove from the elasticsearch
+            await _searchService.DeleteSongAsync(request.Id);
 
             // The song has been deleted, clear the cache
             await _cacheService.RemoveAsync("songs_all");

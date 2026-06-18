@@ -51,5 +51,12 @@ namespace Rythm.API.Controllers
             await _mediator.Send(new RemoveSongCommand(id));
             return Ok("Şarkı silindi.");
         }
+
+        [HttpGet("search")]
+        public async Task<IActionResult> Search(string query)
+        {
+            var result = await _mediator.Send(new SearchSongsQuery(query));
+            return Ok(result);
+        }
     }
 }

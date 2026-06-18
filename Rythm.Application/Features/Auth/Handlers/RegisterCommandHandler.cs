@@ -10,16 +10,18 @@ using System.Threading.Tasks;
 
 namespace Rythm.Application.Features.Auth.Handlers
 {
-    public class RegisterCommandHandler : IRequestHandler<RegisterCommand, bool>
+    public class RegisterCommandHandler : IRequestHandler<RegisterCommand>
     {
         private readonly UserManager<AppUser> _userManager;
+        private readonly RoleManager<IdentityRole<int>> _roleManager;
 
-        public RegisterCommandHandler(UserManager<AppUser> userManager)
+        public RegisterCommandHandler(UserManager<AppUser> userManager, RoleManager<IdentityRole<int>> roleManager)
         {
             _userManager = userManager;
+            _roleManager = roleManager;
         }
 
-        public async Task<bool> Handle(RegisterCommand request, CancellationToken cancellationToken)
+        public async Task Handle(RegisterCommand request, CancellationToken cancellationToken)
         {
             var user = new AppUser
             {
@@ -28,11 +30,17 @@ namespace Rythm.Application.Features.Auth.Handlers
                 UserName = request.UserName,
                 Email = request.Email,
                 BirthDate = request.BirthDate,
-                CreatedAt = DateTime.UtcNow
+                CreatedAt = DateTime.Now
             };
 
-            var result = await _userManager.CreateAsync(user, request.Password);
-            return result.Succeeded;
+            await _userManager.CreateAsync(user, request.Password);
+
+            // Rol yoksa oluştur, varsa geç
+            if (!await _roleManager.RoleExistsAsync("User"))
+                await _roleManager.CreateAsync(new IdentityRole<int>("User"));
+
+            // Kullanıcıya User rolünü ver
+            await _userManager.AddToRoleAsync(user, "User");
         }
     }
 }

@@ -9,6 +9,7 @@ using Rythm.Application.Mappings;
 using Rythm.Domain.Entities;
 using Rythm.Infrastructure.Auth;
 using Rythm.Infrastructure.Cache;
+using Rythm.Infrastructure.Search;
 using Rythm.Infrastructure.Storage;
 using Rythm.Persistence.Context;
 using Rythm.Persistence.Repositories;
@@ -18,6 +19,17 @@ using System.Text;
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
+
+builder.Services.AddCors(config =>
+{
+    config.AddDefaultPolicy(builder =>
+    {
+        builder.WithOrigins("http://localhost:4200")
+               .AllowAnyMethod()
+               .AllowAnyHeader()
+               .AllowCredentials();
+    });
+});
 
 builder.Services.AddAutoMapper(typeof(SongProfile).Assembly);
 
@@ -67,6 +79,7 @@ builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
 builder.Services.AddScoped<IJwtService, JwtService>();
 builder.Services.AddScoped<IFileStorageService, LocalFileStorageService>();
 builder.Services.AddScoped<ICacheService, RedisCacheService>();
+builder.Services.AddScoped<ISearchService, ElasticsearchService>();
 
 builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
@@ -81,6 +94,8 @@ if (app.Environment.IsDevelopment())
     app.UseSwagger();
     app.UseSwaggerUI();
 }
+
+app.UseCors();
 
 app.UseStaticFiles();
 
