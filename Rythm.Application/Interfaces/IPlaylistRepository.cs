@@ -14,5 +14,9 @@ namespace Rythm.Application.Interfaces
         Task AddAsync(Playlist playlist);
         Task UpdateAsync(Playlist playlist);
         Task DeleteAsync(int id);
+
+        Task<List<Playlist>> GetByUserIdAsync(int userId);
+        Task AddSongAsync(PlaylistSong playlistSong);
+        Task RemoveSongAsync(int playlistId, int songId);
     }
 }

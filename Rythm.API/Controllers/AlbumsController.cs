@@ -28,7 +28,6 @@ namespace Rythm.API.Controllers
         public async Task<IActionResult> GetAlbumById(int id)
         {
             var result = await _mediator.Send(new GetAlbumByIdQuery(id));
-            if (result == null) return NotFound("Albüm bulunamadı.");
             return Ok(result);
         }
 
@@ -36,21 +35,21 @@ namespace Rythm.API.Controllers
         public async Task<IActionResult> CreateAlbum(CreateAlbumCommand command)
         {
             await _mediator.Send(command);
-            return Ok("Albüm oluşturuldu.");
+            return Ok(new { message = "Albüm oluşturuldu." });
         }
 
         [HttpPut]
         public async Task<IActionResult> UpdateAlbum(UpdateAlbumCommand command)
         {
             await _mediator.Send(command);
-            return Ok("Albüm güncellendi.");
+            return Ok(new { message = "Albüm güncellendi." });
         }
 
         [HttpDelete("{id}")]
         public async Task<IActionResult> RemoveAlbum(int id)
         {
             await _mediator.Send(new RemoveAlbumCommand(id));
-            return Ok("Albüm silindi.");
+            return Ok(new { message = "Albüm silindi." });
         }
     }
 }

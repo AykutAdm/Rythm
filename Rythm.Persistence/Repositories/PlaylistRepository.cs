@@ -24,6 +24,11 @@ namespace Rythm.Persistence.Repositories
             await _context.Playlists.AddAsync(playlist);
         }
 
+        public async Task AddSongAsync(PlaylistSong playlistSong)
+        {
+            await _context.PlaylistSongs.AddAsync(playlistSong);
+        }
+
         public async Task DeleteAsync(int id)
         {
             var playlist = await _context.Playlists.FindAsync(id);
@@ -41,7 +46,31 @@ namespace Rythm.Persistence.Repositories
 
         public async Task<Playlist> GetByIdAsync(int id)
         {
-            return await _context.Playlists.AsNoTracking().Include(x => x.PlaylistSongs).ThenInclude(x => x.Song).FirstOrDefaultAsync(x => x.PlaylistId == id);
+            return await _context.Playlists.AsNoTracking()
+       .Include(x => x.PlaylistSongs)
+           .ThenInclude(x => x.Song)
+               .ThenInclude(x => x.Artist)
+       .Include(x => x.PlaylistSongs)
+           .ThenInclude(x => x.Song)
+               .ThenInclude(x => x.Album)
+       .Include(x => x.PlaylistSongs)
+           .ThenInclude(x => x.Song)
+               .ThenInclude(x => x.Genre)
+       .FirstOrDefaultAsync(x => x.PlaylistId == id);
+        }
+
+        public async Task<List<Playlist>> GetByUserIdAsync(int userId)
+        {
+            return await _context.Playlists.AsNoTracking().Include(x => x.PlaylistSongs).ThenInclude(x => x.Song).Where(x => x.AppUserId == userId).ToListAsync();
+        }
+
+        public async Task RemoveSongAsync(int playlistId, int songId)
+        {
+            var playlistSong = await _context.PlaylistSongs.FirstOrDefaultAsync(x => x.PlaylistId == playlistId && x.SongId == songId);
+            if (playlistSong != null)
+            {
+                _context.PlaylistSongs.Remove(playlistSong);
+            }
         }
 
         public async Task UpdateAsync(Playlist playlist)

@@ -40,7 +40,7 @@ namespace Rythm.Persistence.Repositories
 
         public async Task<Song> GetByIdAsync(int id)
         {
-            return await _context.Songs.AsNoTracking().Include(x => x.Artist).Include(x => x.Album).Include(x => x.Genre).FirstOrDefaultAsync(x => x.SongId == id);
+            return await _context.Songs.Include(x => x.Artist).Include(x => x.Album).Include(x => x.Genre).FirstOrDefaultAsync(x => x.SongId == id);
         }
 
         public async Task UpdateAsync(Song song)

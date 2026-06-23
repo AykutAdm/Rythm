@@ -17,7 +17,7 @@ namespace Rythm.Application.Mappings
             CreateMap<Playlist, ResultPlaylistDto>();
 
             CreateMap<Playlist, GetPlaylistByIdDto>()
-                .ForMember(dest => dest.Songs, opt => opt.MapFrom(src => src.PlaylistSongs.Select(ps => ps.Song)));
+                 .ForMember(dest => dest.Songs, opt => opt.MapFrom(src => src.PlaylistSongs.Select(ps => ps.Song)));
 
             CreateMap<CreatePlaylistCommand, Playlist>();
             CreateMap<UpdatePlaylistCommand, Playlist>();

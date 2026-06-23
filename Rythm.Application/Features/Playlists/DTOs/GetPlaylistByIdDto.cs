@@ -1,4 +1,4 @@
-﻿using Rythm.Application.Features.Artists.DTOs;
+﻿using Rythm.Application.Features.Songs.DTOs;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -14,6 +14,6 @@ namespace Rythm.Application.Features.Playlists.DTOs
         public string? Description { get; set; }
         public string? CoverImageUrl { get; set; }
         public bool IsPublic { get; set; }
-        public List<SongSummaryDto> Songs { get; set; }
+        public List<ResultSongDto> Songs { get; set; }
     }
 }

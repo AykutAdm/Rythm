@@ -14,7 +14,9 @@ namespace Rythm.Application.Features.Songs.Commands
         public string? CoverImageUrl { get; set; }
         public string AudioUrl { get; set; }
         public int DurationInSeconds { get; set; }
+        public int PlayCount { get; set; }
         public DateTime ReleaseDate { get; set; }
+        public int ArtistId { get; set; }
         public int? AlbumId { get; set; }
         public int? GenreId { get; set; }
     }

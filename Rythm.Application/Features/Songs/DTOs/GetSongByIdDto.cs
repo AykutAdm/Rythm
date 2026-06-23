@@ -15,8 +15,11 @@ namespace Rythm.Application.Features.Songs.DTOs
         public int DurationInSeconds { get; set; }
         public int PlayCount { get; set; }
         public DateTime ReleaseDate { get; set; }
+        public int ArtistId { get; set; }
         public string ArtistName { get; set; }
+        public int? AlbumId { get; set; }
         public string? AlbumTitle { get; set; }
+        public int? GenreId { get; set; }
         public string? GenreName { get; set; }
     }
 }

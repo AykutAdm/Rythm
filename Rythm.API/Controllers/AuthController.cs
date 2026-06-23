@@ -20,7 +20,7 @@ namespace Rythm.API.Controllers
         public async Task<IActionResult> Register(RegisterCommand command)
         {
             await _mediator.Send(command);
-            return Ok("Kayıt başarılı.");
+            return Ok(new { message = "Kayıt başarılı." });
         }
 
 
@@ -30,7 +30,7 @@ namespace Rythm.API.Controllers
             var token = await _mediator.Send(command);
             if (token == null)
             {
-                return Unauthorized("Email veya şifre hatalı.");
+                return Unauthorized(new { message = "Email veya şifre hatalı." });
             }
 
             return Ok(new { token });

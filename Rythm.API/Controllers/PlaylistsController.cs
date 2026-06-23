@@ -52,5 +52,27 @@ namespace Rythm.API.Controllers
             await _mediator.Send(new RemovePlaylistCommand(id));
             return Ok("Playlist silindi.");
         }
+
+
+        [HttpGet("user/{userId}")]
+        public async Task<IActionResult> GetByUserId(int userId)
+        {
+            var result = await _mediator.Send(new GetPlaylistsByUserIdQuery(userId));
+            return Ok(result);
+        }
+
+        [HttpPost("add-song")]
+        public async Task<IActionResult> AddSong(AddSongToPlaylistCommand command)
+        {
+            await _mediator.Send(command);
+            return Ok(new { message = "Şarkı eklendi." });
+        }
+
+        [HttpPost("remove-song")]
+        public async Task<IActionResult> RemoveSong(RemoveSongFromPlaylistCommand command)
+        {
+            await _mediator.Send(command);
+            return Ok(new { message = "Şarkı kaldırıldı." });
+        }
     }
 }

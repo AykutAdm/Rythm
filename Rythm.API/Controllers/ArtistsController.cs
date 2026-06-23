@@ -35,21 +35,21 @@ namespace Rythm.API.Controllers
         public async Task<IActionResult> CreateArtist(CreateArtistCommand command)
         {
             await _mediator.Send(command);
-            return Ok("Sanatçı oluşturuldu.");
+            return Ok(new { message = "Sanatçı oluşturuldu." });
         }
 
         [HttpPut]
         public async Task<IActionResult> UpdateArtist(UpdateArtistCommand command)
         {
             await _mediator.Send(command);
-            return Ok("Sanatçı güncellendi.");
+            return Ok(new { message = "Sanatçı güncellendi." });
         }
 
         [HttpDelete("{id}")]
         public async Task<IActionResult> RemoveArtist(int id)
         {
             await _mediator.Send(new RemoveArtistCommand(id));
-            return Ok("Sanatçı silindi.");
+            return Ok(new { message = "Sanatçı silindi." });
         }
     }
 }

@@ -24,8 +24,8 @@ namespace Rythm.Application.Mappings
                 .ForMember(dest => dest.AlbumTitle, opt => opt.MapFrom(src => src.Album.Title))
                 .ForMember(dest => dest.GenreName, opt => opt.MapFrom(src => src.Genre.Name));
 
-            CreateMap<CreateSongCommand, Song>();
-            CreateMap<UpdateSongCommand, Song>();
+            CreateMap<CreateSongCommand, Song>().ReverseMap();
+            CreateMap<UpdateSongCommand, Song>().ReverseMap();
         }
     }
 }

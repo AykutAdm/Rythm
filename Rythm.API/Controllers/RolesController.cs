@@ -20,14 +20,14 @@ namespace Rythm.API.Controllers
         public async Task<IActionResult> AssignRole(AssignRoleCommand command)
         {
             await _mediator.Send(command);
-            return Ok("Rol verildi.");
+            return Ok(new { message = "Rol verildi." });
         }
 
         [HttpPost("remove-role")]
         public async Task<IActionResult> RemoveRole(RemoveRoleCommand command)
         {
             await _mediator.Send(command);
-            return Ok("Rol kaldırıldı.");
+            return Ok(new { message = "Rol kaldırıldı." });
         }
     }
 }

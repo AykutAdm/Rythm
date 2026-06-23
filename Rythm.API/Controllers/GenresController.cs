@@ -28,7 +28,6 @@ namespace Rythm.API.Controllers
         public async Task<IActionResult> GetGenreById(int id)
         {
             var result = await _mediator.Send(new GetGenreByIdQuery(id));
-            if (result == null) return NotFound("Tür bulunamadı.");
             return Ok(result);
         }
 
@@ -36,21 +35,21 @@ namespace Rythm.API.Controllers
         public async Task<IActionResult> CreateGenre(CreateGenreCommand command)
         {
             await _mediator.Send(command);
-            return Ok("Tür oluşturuldu.");
+            return Ok(new { message = "Şarkı türü oluşturuldu." });
         }
 
         [HttpPut]
         public async Task<IActionResult> UpdateGenre(UpdateGenreCommand command)
         {
             await _mediator.Send(command);
-            return Ok("Tür güncellendi.");
+            return Ok(new { message = "Şarkı türü güncellendi." });
         }
 
         [HttpDelete("{id}")]
         public async Task<IActionResult> RemoveGenre(int id)
         {
             await _mediator.Send(new RemoveGenreCommand(id));
-            return Ok("Tür silindi.");
+            return Ok(new { message = "Şarkı Türü silindi." });
         }
     }
 }
