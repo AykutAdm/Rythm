@@ -20,11 +20,13 @@ namespace Rythm.Application.Features.Artists.DTOs
     {
         public int AlbumId { get; set; }
         public string Title { get; set; }
+        public string? CoverImageUrl { get; set; }
     }
 
     public class SongSummaryDto
     {
         public int SongId { get; set; }
         public string Title { get; set; }
+        public string? CoverImageUrl { get; set; }
     }
 }

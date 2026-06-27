@@ -1,4 +1,5 @@
 ﻿using MediatR;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Rythm.Application.Features.Songs.Commands;
@@ -17,6 +18,7 @@ namespace Rythm.API.Controllers
             _mediator = mediator;
         }
 
+
         [HttpGet]
         public async Task<IActionResult> GetAllSongs()
         {
@@ -31,6 +33,7 @@ namespace Rythm.API.Controllers
             return Ok(result);
         }
 
+        [Authorize(Roles = "Admin")]
         [HttpPost]
         public async Task<IActionResult> CreateSong(CreateSongCommand command)
         {
@@ -38,6 +41,7 @@ namespace Rythm.API.Controllers
             return Ok(new { message = "Şarkı oluşturuldu." });
         }
 
+        [Authorize(Roles = "Admin")]
         [HttpPut]
         public async Task<IActionResult> UpdateSong(UpdateSongCommand command)
         {
@@ -45,6 +49,7 @@ namespace Rythm.API.Controllers
             return Ok(new { message = "Şarkı güncellendi." });
         }
 
+        [Authorize(Roles = "Admin")]
         [HttpDelete("{id}")]
         public async Task<IActionResult> RemoveSong(int id)
         {
@@ -52,6 +57,7 @@ namespace Rythm.API.Controllers
             return Ok(new { message = "Şarkı silindi." });
         }
 
+        [Authorize(Roles = "Admin,User,Premium,Artist")]
         [HttpGet("search")]
         public async Task<IActionResult> Search(string query)
         {

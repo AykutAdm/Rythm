@@ -9,7 +9,7 @@ namespace Rythm.Application.Interfaces
 {
     public interface ISearchService
     {
-        Task IndexSongAsync(int songId, string title, string artistName, string? albumTitle, string? genreName);
+        Task IndexSongAsync(int songId, string title, string artistName, string? albumTitle, string? genreName, string coverImage, string? audioUrl);
         Task DeleteSongAsync(int songId);
         Task<List<SongSearchResult>> SearchSongsAsync(string query);
     }

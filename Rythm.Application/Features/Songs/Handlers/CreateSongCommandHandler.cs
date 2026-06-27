@@ -29,13 +29,13 @@ namespace Rythm.Application.Features.Songs.Handlers
         public async Task Handle(CreateSongCommand request, CancellationToken cancellationToken)
         {
             var value = _mapper.Map<Song>(request);
-            value.CreatedAt = DateTime.UtcNow;
+            value.CreatedAt = DateTime.Now;
             await _unitOfWork.Songs.AddAsync(value);
             await _unitOfWork.SaveChangesAsync();
 
             //add to elasticsearch
             var songWithDetails = await _unitOfWork.Songs.GetByIdAsync(value.SongId);
-            await _searchService.IndexSongAsync(songWithDetails!.SongId,songWithDetails.Title,songWithDetails.Artist?.Name ?? string.Empty,songWithDetails.Album?.Title,songWithDetails.Genre?.Name);
+            await _searchService.IndexSongAsync(songWithDetails!.SongId, songWithDetails.Title, songWithDetails.Artist?.Name ?? string.Empty, songWithDetails.Album?.Title, songWithDetails.Genre?.Name, songWithDetails.CoverImageUrl, songWithDetails.AudioUrl ?? string.Empty);
 
             // New song added, clear cache
             await _cacheService.RemoveAsync("songs_all");

@@ -1,4 +1,5 @@
 ﻿using MediatR;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Rythm.Application.Features.Genres.Commands;
@@ -31,6 +32,7 @@ namespace Rythm.API.Controllers
             return Ok(result);
         }
 
+        [Authorize(Roles = "Admin")]
         [HttpPost]
         public async Task<IActionResult> CreateGenre(CreateGenreCommand command)
         {
@@ -38,6 +40,7 @@ namespace Rythm.API.Controllers
             return Ok(new { message = "Şarkı türü oluşturuldu." });
         }
 
+        [Authorize(Roles = "Admin")]
         [HttpPut]
         public async Task<IActionResult> UpdateGenre(UpdateGenreCommand command)
         {
@@ -45,6 +48,7 @@ namespace Rythm.API.Controllers
             return Ok(new { message = "Şarkı türü güncellendi." });
         }
 
+        [Authorize(Roles = "Admin")]
         [HttpDelete("{id}")]
         public async Task<IActionResult> RemoveGenre(int id)
         {

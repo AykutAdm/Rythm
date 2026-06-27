@@ -15,6 +15,9 @@ namespace Rythm.Application.Mappings
         {
             CreateMap<AppUser, ResultUserDto>()
            .ForMember(dest => dest.Roles, opt => opt.Ignore());
+
+            CreateMap<AppUser, UserProfileDto>()
+            .ForMember(dest => dest.Roles, opt => opt.Ignore());
         }
     }
 }

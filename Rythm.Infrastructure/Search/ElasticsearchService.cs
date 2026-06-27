@@ -22,7 +22,7 @@ namespace Rythm.Infrastructure.Search
             _client = new ElasticsearchClient(settings);
         }
 
-        public async Task IndexSongAsync(int songId, string title, string artistName, string? albumTitle, string? genreName)
+        public async Task IndexSongAsync(int songId, string title, string artistName, string? albumTitle, string? genreName, string coverImage, string audioUrl)
         {
             var song = new SongSearchResult
             {
@@ -30,7 +30,10 @@ namespace Rythm.Infrastructure.Search
                 Title = title,
                 ArtistName = artistName,
                 AlbumTitle = albumTitle,
-                GenreName = genreName
+                GenreName = genreName,
+                CoverImageUrl = coverImage,
+                AudioUrl = audioUrl
+
             };
 
             await _client.IndexAsync(song, i => i.Index(IndexName).Id(songId.ToString()));

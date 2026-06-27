@@ -1,4 +1,5 @@
 ﻿using MediatR;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Rythm.Application.Features.Artists.Commands;
@@ -31,6 +32,7 @@ namespace Rythm.API.Controllers
             return Ok(result);
         }
 
+        [Authorize(Roles = "Admin")]
         [HttpPost]
         public async Task<IActionResult> CreateArtist(CreateArtistCommand command)
         {
@@ -38,6 +40,7 @@ namespace Rythm.API.Controllers
             return Ok(new { message = "Sanatçı oluşturuldu." });
         }
 
+        [Authorize(Roles = "Admin")]
         [HttpPut]
         public async Task<IActionResult> UpdateArtist(UpdateArtistCommand command)
         {
@@ -45,6 +48,7 @@ namespace Rythm.API.Controllers
             return Ok(new { message = "Sanatçı güncellendi." });
         }
 
+        [Authorize(Roles = "Admin")]
         [HttpDelete("{id}")]
         public async Task<IActionResult> RemoveArtist(int id)
         {

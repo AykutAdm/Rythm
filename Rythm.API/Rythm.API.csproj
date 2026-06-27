@@ -15,10 +15,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Extensions\" />
-  </ItemGroup>
-
-  <ItemGroup>
     <ProjectReference Include="..\Rythm.Infrastructure\Rythm.Infrastructure.csproj" />
     <ProjectReference Include="..\Rythm.Persistence\Rythm.Persistence.csproj" />
   </ItemGroup>

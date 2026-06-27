@@ -18,6 +18,7 @@ namespace Rythm.Persistence.Repositories
         public IAlbumRepository Albums { get; }
         public IGenreRepository Genres { get; }
         public IPlaylistRepository Playlists { get; }
+        public IUserLikedSongRepository LikedSongs { get; }
 
         public UnitOfWork(RythmDbContext context)
         {
@@ -27,6 +28,7 @@ namespace Rythm.Persistence.Repositories
             Albums = new AlbumRepository(context);
             Genres = new GenreRepository(context);
             Playlists = new PlaylistRepository(context);
+            LikedSongs = new UserLikedSongRepository(context);
         }
 
         public async Task<int> SaveChangesAsync()

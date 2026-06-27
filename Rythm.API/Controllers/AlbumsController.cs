@@ -1,4 +1,5 @@
 ﻿using MediatR;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Rythm.Application.Features.Albums.Commands;
@@ -24,6 +25,7 @@ namespace Rythm.API.Controllers
             return Ok(result);
         }
 
+   
         [HttpGet("{id}")]
         public async Task<IActionResult> GetAlbumById(int id)
         {
@@ -31,6 +33,7 @@ namespace Rythm.API.Controllers
             return Ok(result);
         }
 
+        [Authorize(Roles = "Admin")]
         [HttpPost]
         public async Task<IActionResult> CreateAlbum(CreateAlbumCommand command)
         {
@@ -38,6 +41,7 @@ namespace Rythm.API.Controllers
             return Ok(new { message = "Albüm oluşturuldu." });
         }
 
+        [Authorize(Roles = "Admin")]
         [HttpPut]
         public async Task<IActionResult> UpdateAlbum(UpdateAlbumCommand command)
         {
@@ -45,6 +49,7 @@ namespace Rythm.API.Controllers
             return Ok(new { message = "Albüm güncellendi." });
         }
 
+        [Authorize(Roles = "Admin")]
         [HttpDelete("{id}")]
         public async Task<IActionResult> RemoveAlbum(int id)
         {
