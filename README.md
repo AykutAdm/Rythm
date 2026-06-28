@@ -3,7 +3,8 @@
 > A modern music streaming platform built with **ASP.NET Core (.NET 8)** and **Angular 21**, following **Clean Architecture** and **CQRS** principles.
 
 <p align="center">
-  <img src="docs/demo.gif" alt="Rythm Demo" />
+  <video src="docs/home.mp4" width="800" autoplay loop muted playsinline></video>
+  ![Demo](./docs/home.mp4)
 </p>
 
 ---
