@@ -1,0 +1,199 @@
+<div class="space-y-6">
+  <!-- Header -->
+  <div class="flex items-center gap-4">
+    <button
+      routerLink="/admin/songs"
+      type="button"
+      class="w-9 h-9 rounded-xl bg-white/5 hover:bg-white/10 text-zinc-400 hover:text-white flex items-center justify-center transition-all duration-200"
+    >
+      <span class="material-symbols-outlined text-sm">arrow_back</span>
+    </button>
+    <div>
+      <h2 class="text-2xl font-bold text-white">Yeni Şarkı</h2>
+      <p class="text-sm text-zinc-400 mt-1">Yeni bir şarkı ekle</p>
+    </div>
+  </div>
+
+  <!-- Form -->
+  <form
+    (ngSubmit)="onSubmit()"
+    class="bg-black/40 backdrop-blur-xl rounded-2xl border border-white/10 p-6 space-y-6"
+  >
+    <div class="grid grid-cols-2 gap-6">
+      <div class="space-y-2">
+        <label class="text-sm font-medium text-zinc-400"
+          >Başlık <span class="text-red-400">*</span></label
+        >
+        <input
+          type="text"
+          [(ngModel)]="model.title"
+          name="title"
+          placeholder="Şarkı adı"
+          class="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-sm text-white placeholder:text-zinc-600 focus:outline-none focus:border-blue-500 transition-colors"
+        />
+      </div>
+
+      <div class="space-y-2">
+        <label class="text-sm font-medium text-zinc-400"
+          >Sanatçı <span class="text-red-400">*</span></label
+        >
+        <select
+          [(ngModel)]="model.artistId"
+          name="artistId"
+          class="w-full bg-zinc-900 border border-white/10 rounded-xl px-4 py-3 text-sm text-white focus:outline-none focus:border-blue-500 transition-colors"
+        >
+          <option [value]="0" disabled>Sanatçı seç</option>
+          @for (artist of artists(); track artist.artistId) {
+            <option [value]="artist.artistId">{{ artist.name }}</option>
+          }
+        </select>
+      </div>
+
+      <div class="space-y-2">
+        <label class="text-sm font-medium text-zinc-400">Albüm</label>
+        <select
+          [(ngModel)]="model.albumId"
+          name="albumId"
+          class="w-full bg-zinc-900 border border-white/10 rounded-xl px-4 py-3 text-sm text-white focus:outline-none focus:border-blue-500 transition-colors"
+        >
+          <option [value]="0">Albüm seç</option>
+          @for (album of albums(); track album.albumId) {
+            <option [value]="album.albumId">{{ album.title }}</option>
+          }
+        </select>
+      </div>
+
+      <div class="space-y-2">
+        <label class="text-sm font-medium text-zinc-400">Tür</label>
+        <select
+          [(ngModel)]="model.genreId"
+          name="genreId"
+          class="w-full bg-zinc-900 border border-white/10 rounded-xl px-4 py-3 text-sm text-white focus:outline-none focus:border-blue-500 transition-colors"
+        >
+          <option [value]="0">Tür seç</option>
+          @for (genre of genres(); track genre.genreId) {
+            <option [value]="genre.genreId">{{ genre.name }}</option>
+          }
+        </select>
+      </div>
+
+      <div class="space-y-2">
+        <label class="text-sm font-medium text-zinc-400"
+          >Süre (saniye) <span class="text-red-400">*</span></label
+        >
+        <input
+          type="number"
+          [(ngModel)]="model.durationInSeconds"
+          name="durationInSeconds"
+          placeholder="240"
+          class="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-sm text-white placeholder:text-zinc-600 focus:outline-none focus:border-blue-500 transition-colors"
+        />
+      </div>
+
+      <div class="space-y-2">
+        <label class="text-sm font-medium text-zinc-400">Erişim Planı</label>
+        <select
+          [(ngModel)]="model.requiredPlan"
+          name="requiredPlan"
+          class="w-full bg-zinc-900 border border-white/10 rounded-xl px-4 py-3 text-sm text-white focus:outline-none focus:border-blue-500 transition-colors"
+        >
+          <option value="Free">Free</option>
+          <option value="Premium">Premium</option>
+        </select>
+      </div>
+
+      <div class="space-y-2">
+        <label class="text-sm font-medium text-zinc-400"
+          >Çıkış Tarihi <span class="text-red-400">*</span></label
+        >
+        <input
+          type="date"
+          [(ngModel)]="model.releaseDate"
+          name="releaseDate"
+          class="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-sm text-white focus:outline-none focus:border-blue-500 transition-colors [color-scheme:dark]"
+        />
+      </div>
+
+      <div class="space-y-2">
+        <label class="text-sm font-medium text-zinc-400"
+          >Şarkı Dosyası <span class="text-red-400">*</span></label
+        >
+        <div
+          class="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 flex items-center justify-between"
+        >
+          @if (model.audioUrl) {
+            <span class="text-sm text-green-400 truncate">{{ model.audioUrl }}</span>
+          } @else {
+            <span class="text-sm text-zinc-600">mp3, wav veya flac seç</span>
+          }
+          <label class="cursor-pointer">
+            @if (isUploadingAudio()) {
+              <div
+                class="w-5 h-5 border-2 border-blue-400 border-t-transparent rounded-full animate-spin"
+              ></div>
+            } @else {
+              <span
+                class="material-symbols-outlined text-zinc-400 hover:text-white transition-colors"
+                >upload</span
+              >
+            }
+            <input
+              type="file"
+              accept=".mp3,.wav,.flac"
+              (change)="onAudioSelected($event)"
+              class="hidden"
+            />
+          </label>
+        </div>
+      </div>
+
+      <div class="space-y-2">
+        <label class="text-sm font-medium text-zinc-400">Kapak Resmi</label>
+        <div
+          class="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 flex items-center justify-between"
+        >
+          @if (model.coverImageUrl) {
+            <span class="text-sm text-green-400 truncate">{{ model.coverImageUrl }}</span>
+          } @else {
+            <span class="text-sm text-zinc-600">jpg, png veya webp seç</span>
+          }
+          <label class="cursor-pointer">
+            @if (isUploadingImage()) {
+              <div
+                class="w-5 h-5 border-2 border-blue-400 border-t-transparent rounded-full animate-spin"
+              ></div>
+            } @else {
+              <span
+                class="material-symbols-outlined text-zinc-400 hover:text-white transition-colors"
+                >image</span
+              >
+            }
+            <input
+              type="file"
+              accept=".jpg,.jpeg,.png,.webp"
+              (change)="onImageSelected($event)"
+              class="hidden"
+            />
+          </label>
+        </div>
+      </div>
+    </div>
+
+    <div class="flex items-center justify-end gap-3 pt-2">
+      <button
+        type="button"
+        routerLink="/admin/songs"
+        class="px-6 py-2.5 bg-white/5 hover:bg-white/10 text-zinc-400 hover:text-white text-sm font-semibold rounded-xl transition-all duration-200"
+      >
+        İptal
+      </button>
+      <button
+        type="submit"
+        class="flex items-center gap-2 px-6 py-2.5 bg-blue-500 hover:bg-blue-400 text-white text-sm font-semibold rounded-xl transition-all duration-200 hover:scale-105"
+      >
+        <span class="material-symbols-outlined text-sm">add</span>
+        Kaydet
+      </button>
+    </div>
+  </form>
+</div>

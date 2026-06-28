@@ -1,0 +1,170 @@
+<div class="space-y-6">
+  <!-- Header -->
+  <div class="flex items-center gap-4">
+    <button
+      routerLink="/admin/songs"
+      type="button"
+      class="w-9 h-9 rounded-xl bg-white/5 hover:bg-white/10 text-zinc-400 hover:text-white flex items-center justify-center transition-all duration-200"
+    >
+      <span class="material-symbols-outlined text-sm">arrow_back</span>
+    </button>
+    <div>
+      <h2 class="text-2xl font-bold text-white">Şarkıyı Düzenle</h2>
+      <p class="text-sm text-zinc-400 mt-1">Şarkı bilgilerini güncelle</p>
+    </div>
+  </div>
+
+  <!-- Form -->
+  <form
+    (ngSubmit)="onSubmit()"
+    class="bg-black/40 backdrop-blur-xl rounded-2xl border border-white/10 p-6 space-y-6"
+  >
+    <div class="grid grid-cols-2 gap-6">
+      <div class="space-y-2">
+        <label class="text-sm font-medium text-zinc-400"
+          >Başlık <span class="text-red-400">*</span></label
+        >
+        <input
+          type="text"
+          [(ngModel)]="model.title"
+          name="title"
+          placeholder="Şarkı adı"
+          class="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-sm text-white placeholder:text-zinc-600 focus:outline-none focus:border-blue-500 transition-colors"
+        />
+      </div>
+
+      <div class="space-y-2">
+        <label class="text-sm font-medium text-zinc-400">Albüm</label>
+        <select
+          [(ngModel)]="model.albumId"
+          name="albumId"
+          class="w-full bg-zinc-900 border border-white/10 rounded-xl px-4 py-3 text-sm text-white focus:outline-none focus:border-blue-500 transition-colors"
+        >
+          <option [ngValue]="0">Albüm seç</option>
+          @for (album of albums(); track album.albumId) {
+            <option [ngValue]="album.albumId">{{ album.title }}</option>
+          }
+        </select>
+      </div>
+
+      <div class="space-y-2">
+        <label class="text-sm font-medium text-zinc-400">Tür</label>
+        <select
+          [(ngModel)]="model.genreId"
+          name="genreId"
+          class="w-full bg-zinc-900 border border-white/10 rounded-xl px-4 py-3 text-sm text-white focus:outline-none focus:border-blue-500 transition-colors"
+        >
+          <option [ngValue]="0">Tür seç</option>
+          @for (genre of genres(); track genre.genreId) {
+            <option [ngValue]="genre.genreId">{{ genre.name }}</option>
+          }
+        </select>
+      </div>
+
+      <div class="space-y-2">
+        <label class="text-sm font-medium text-zinc-400">Sanatçı</label>
+        <select
+          [(ngModel)]="model.artistId"
+          name="artistId"
+          class="w-full bg-zinc-900 border border-white/10 rounded-xl px-4 py-3 text-sm text-white focus:outline-none focus:border-blue-500 transition-colors"
+        >
+          <option [ngValue]="0">Sanatçı seç</option>
+          @for (artist of artists(); track artist.artistId) {
+            <option [ngValue]="artist.artistId">{{ artist.name }}</option>
+          }
+        </select>
+      </div>
+
+      <div class="space-y-2">
+        <label class="text-sm font-medium text-zinc-400"
+          >Süre (saniye) <span class="text-red-400">*</span></label
+        >
+        <input
+          type="number"
+          [(ngModel)]="model.durationInSeconds"
+          name="durationInSeconds"
+          placeholder="240"
+          class="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-sm text-white placeholder:text-zinc-600 focus:outline-none focus:border-blue-500 transition-colors"
+        />
+      </div>
+
+      <div class="space-y-2">
+        <label class="text-sm font-medium text-zinc-400"
+          >Oynatma Sayısı <span class="text-red-400">*</span></label
+        >
+        <input
+          type="number"
+          [(ngModel)]="model.playCount"
+          name="playCount"
+          placeholder="240"
+          class="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-sm text-white placeholder:text-zinc-600 focus:outline-none focus:border-blue-500 transition-colors"
+        />
+      </div>
+
+      <div class="space-y-2">
+        <label class="text-sm font-medium text-zinc-400"
+          >Çıkış Tarihi <span class="text-red-400">*</span></label
+        >
+        <input
+          type="date"
+          [(ngModel)]="model.releaseDate"
+          name="releaseDate"
+          class="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-sm text-white focus:outline-none focus:border-blue-500 transition-colors [color-scheme:dark]"
+        />
+      </div>
+
+      <div class="space-y-2">
+        <label class="text-sm font-medium text-zinc-400">Erişim Planı</label>
+        <select
+          [(ngModel)]="model.requiredPlan"
+          name="requiredPlan"
+          class="w-full bg-zinc-900 border border-white/10 rounded-xl px-4 py-3 text-sm text-white focus:outline-none focus:border-blue-500 transition-colors"
+        >
+          <option value="Free">Free</option>
+          <option value="Premium">Premium</option>
+        </select>
+      </div>
+
+      <div class="space-y-2">
+        <label class="text-sm font-medium text-zinc-400"
+          >Audio URL <span class="text-red-400">*</span></label
+        >
+        <input
+          type="text"
+          [(ngModel)]="model.audioUrl"
+          name="audioUrl"
+          placeholder="Storage/songs/..."
+          class="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-sm text-white placeholder:text-zinc-600 focus:outline-none focus:border-blue-500 transition-colors"
+        />
+      </div>
+
+      <div class="space-y-2">
+        <label class="text-sm font-medium text-zinc-400">Kapak Resmi URL</label>
+        <input
+          type="text"
+          [(ngModel)]="model.coverImageUrl"
+          name="coverImageUrl"
+          placeholder="Storage/images/..."
+          class="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-sm text-white placeholder:text-zinc-600 focus:outline-none focus:border-blue-500 transition-colors"
+        />
+      </div>
+    </div>
+
+    <div class="flex items-center justify-end gap-3 pt-2">
+      <button
+        type="button"
+        routerLink="/admin/songs"
+        class="px-6 py-2.5 bg-white/5 hover:bg-white/10 text-zinc-400 hover:text-white text-sm font-semibold rounded-xl transition-all duration-200"
+      >
+        İptal
+      </button>
+      <button
+        type="submit"
+        class="flex items-center gap-2 px-6 py-2.5 bg-blue-500 hover:bg-blue-400 text-white text-sm font-semibold rounded-xl transition-all duration-200 hover:scale-105"
+      >
+        <span class="material-symbols-outlined text-sm">save</span>
+        Güncelle
+      </button>
+    </div>
+  </form>
+</div>

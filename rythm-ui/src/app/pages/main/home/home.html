@@ -1,0 +1,188 @@
+<div class="p-6 space-y-10">
+  <!-- Hoşgeldin -->
+  <div>
+    <h1 class="text-3xl font-black text-white">Merhaba 👋</h1>
+    <p class="text-zinc-400 mt-1 text-sm">Bugün ne dinlemek istersin?</p>
+  </div>
+
+  <!-- Senin için (öneriler) -->
+  @if (authService.isLoggedIn()) {
+    <section class="recommendations-section space-y-4">
+      <div class="flex items-end justify-between gap-4">
+        <div>
+          <div class="flex items-center gap-2 mb-1">
+            <span class="material-symbols-outlined text-green-400 text-xl">auto_awesome</span>
+            <h2 class="text-xl font-bold text-white">Senin için</h2>
+          </div>
+          <p class="text-sm text-zinc-500">Dinleme geçmişine göre seçildi</p>
+        </div>
+        @if (recommendations().length > 0) {
+          <span class="text-xs text-zinc-500 shrink-0">{{ recommendations().length }} öneri</span>
+        }
+      </div>
+
+      @if (recommendations().length > 0) {
+        <div class="recommendations-scroll flex gap-4 overflow-x-auto pb-2 -mx-1 px-1">
+          @for (song of recommendations(); track song.songId) {
+            <article
+              class="recommendation-card shrink-0 w-44 bg-gradient-to-b from-green-500/10 to-white/5 hover:from-green-500/15 hover:to-white/10 rounded-2xl p-3 border border-green-500/20 hover:border-green-500/40 transition-all duration-200 group cursor-pointer"
+              (click)="audioService.play(song)"
+            >
+              <div class="relative mb-3">
+                <img
+                  [src]="song.coverImageUrl"
+                  class="w-full aspect-square rounded-xl object-cover shadow-lg"
+                  [alt]="song.title"
+                />
+                <button
+                  (click)="audioService.play(song); $event.stopPropagation()"
+                  class="absolute bottom-2 right-2 w-9 h-9 bg-green-400 rounded-full flex items-center justify-center shadow-lg opacity-0 group-hover:opacity-100 translate-y-1 group-hover:translate-y-0 transition-all duration-200"
+                >
+                  <span class="material-symbols-outlined text-black text-sm">play_arrow</span>
+                </button>
+                <button
+                  (click)="likedSongsService.toggleLike(song.songId); $event.stopPropagation()"
+                  class="absolute top-2 right-2 w-7 h-7 rounded-full bg-black/50 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-all duration-200"
+                >
+                  <svg
+                    class="w-3.5 h-3.5 transition-colors"
+                    [class.text-green-400]="likedSongsService.isLiked(song.songId)"
+                    [class.text-white]="!likedSongsService.isLiked(song.songId)"
+                    fill="currentColor"
+                    viewBox="0 0 24 24"
+                  >
+                    <path
+                      d="M12 21.593c-5.63-5.539-11-10.297-11-14.402 0-3.791 3.068-5.191 5.281-5.191 1.312 0 4.151.501 5.719 4.457 1.59-3.968 4.464-4.447 5.726-4.447 2.54 0 5.274 1.621 5.274 5.181 0 4.069-5.136 8.625-11 14.402z"
+                    />
+                  </svg>
+                </button>
+              </div>
+              <p class="text-sm font-semibold text-white truncate">{{ song.title }}</p>
+              <p class="text-xs text-zinc-400 truncate mt-0.5">{{ song.artistName }}</p>
+            </article>
+          }
+        </div>
+      } @else {
+        <div
+          class="rounded-2xl border border-dashed border-white/10 bg-white/5 px-6 py-8 text-center"
+        >
+          <span class="material-symbols-outlined text-zinc-500 text-3xl mb-2">headphones</span>
+          <p class="text-sm font-medium text-zinc-300">Henüz öneri yok</p>
+          <p class="text-xs text-zinc-500 mt-1 max-w-sm mx-auto">
+            Birkaç şarkı dinledikten sonra burada sana özel öneriler görünecek.
+          </p>
+        </div>
+      }
+    </section>
+  }
+
+  <!-- Şarkılar -->
+  <section class="space-y-4">
+    <div class="flex items-center justify-between">
+      <h2 class="text-xl font-bold text-white">Şarkılar</h2>
+      <a routerLink="/search" class="text-sm text-zinc-400 hover:text-white transition-colors">
+        Tümünü gör
+      </a>
+    </div>
+
+    <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4">
+      @for (song of songs(); track song.songId) {
+        <article
+          class="bg-white/5 hover:bg-white/10 rounded-2xl p-4 cursor-pointer transition-all duration-200 group"
+          (click)="audioService.play(song)"
+        >
+          <div class="relative mb-4">
+            <img
+              [src]="song.coverImageUrl"
+              class="w-full aspect-square rounded-xl object-cover shadow-lg"
+              [alt]="song.title"
+            />
+
+            <button
+              (click)="audioService.play(song); $event.stopPropagation()"
+              class="absolute bottom-2 right-2 w-10 h-10 bg-green-400 rounded-full flex items-center justify-center shadow-lg opacity-0 group-hover:opacity-100 translate-y-2 group-hover:translate-y-0 transition-all duration-200"
+            >
+              <span class="material-symbols-outlined text-black text-sm">play_arrow</span>
+            </button>
+
+            <button
+              (click)="likedSongsService.toggleLike(song.songId); $event.stopPropagation()"
+              class="absolute top-2 right-2 w-8 h-8 rounded-full bg-black/40 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-all duration-200"
+            >
+              <svg
+                class="w-4 h-4 transition-colors"
+                [class.text-green-400]="likedSongsService.isLiked(song.songId)"
+                [class.text-white]="!likedSongsService.isLiked(song.songId)"
+                fill="currentColor"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  d="M12 21.593c-5.63-5.539-11-10.297-11-14.402 0-3.791 3.068-5.191 5.281-5.191 1.312 0 4.151.501 5.719 4.457 1.59-3.968 4.464-4.447 5.726-4.447 2.54 0 5.274 1.621 5.274 5.181 0 4.069-5.136 8.625-11 14.402z"
+                />
+              </svg>
+            </button>
+          </div>
+          <p class="text-sm font-semibold text-white truncate">{{ song.title }}</p>
+          <p class="text-xs text-zinc-400 truncate mt-1">{{ song.artistName }}</p>
+        </article>
+      }
+    </div>
+  </section>
+
+  <!-- Sanatçılar -->
+  <section class="space-y-4">
+    <div class="flex items-center justify-between">
+      <h2 class="text-xl font-bold text-white">Sanatçılar</h2>
+    </div>
+
+    <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-6 gap-4">
+      @for (artist of artists(); track artist.artistId) {
+        <a
+          [routerLink]="['/artist', artist.artistId]"
+          class="flex flex-col items-center gap-3 bg-white/5 hover:bg-white/10 rounded-2xl p-4 cursor-pointer transition-all duration-200 group"
+        >
+          <img
+            [src]="artist.profileImageUrl"
+            class="w-20 h-20 rounded-full object-cover shadow-lg group-hover:scale-105 transition-transform"
+            [alt]="artist.name"
+          />
+          <p class="text-sm font-semibold text-white text-center truncate w-full">
+            {{ artist.name }}
+          </p>
+          <p class="text-xs text-zinc-500">Sanatçı</p>
+        </a>
+      }
+    </div>
+  </section>
+
+  <!-- Albümler -->
+  <section class="space-y-4">
+    <div class="flex items-center justify-between">
+      <h2 class="text-xl font-bold text-white">Albümler</h2>
+    </div>
+
+    <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4">
+      @for (album of albums(); track album.albumId) {
+        <a
+          [routerLink]="['/album', album.albumId]"
+          class="bg-white/5 hover:bg-white/10 rounded-2xl p-4 cursor-pointer transition-all duration-200 group block"
+        >
+          <div class="relative mb-4">
+            <img
+              [src]="album.coverImageUrl"
+              class="w-full aspect-square rounded-xl object-cover shadow-lg"
+              [alt]="album.title"
+            />
+            <div
+              class="absolute bottom-2 right-2 w-10 h-10 bg-green-400 rounded-full flex items-center justify-center shadow-lg opacity-0 group-hover:opacity-100 translate-y-2 group-hover:translate-y-0 transition-all duration-200"
+            >
+              <span class="material-symbols-outlined text-black text-sm">album</span>
+            </div>
+          </div>
+          <p class="text-sm font-semibold text-white truncate">{{ album.title }}</p>
+          <p class="text-xs text-zinc-400 truncate mt-1">{{ album.artistName }}</p>
+        </a>
+      }
+    </div>
+  </section>
+</div>

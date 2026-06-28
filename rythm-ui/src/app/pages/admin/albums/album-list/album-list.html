@@ -1,0 +1,112 @@
+<div class="space-y-4">
+  <!-- Header -->
+  <div class="flex items-center justify-between">
+    <div>
+      <h2 class="text-2xl font-bold text-white">Albums</h2>
+      <p class="text-sm text-zinc-400 mt-1">{{ albums().length }} albüm listeleniyor</p>
+    </div>
+    <a
+      routerLink="/admin/albums/create"
+      class="flex items-center gap-2 px-4 py-2 bg-blue-500 hover:bg-blue-400 text-white text-sm font-semibold rounded-xl transition-all duration-200 hover:scale-105"
+    >
+      <span class="material-symbols-outlined text-sm">add</span>
+      Yeni Albüm
+    </a>
+  </div>
+
+  <!-- Tablo -->
+  <div class="bg-black/40 backdrop-blur-xl rounded-2xl border border-white/10 overflow-hidden">
+    <table class="w-full">
+      <thead>
+        <tr class="border-b border-white/5">
+          <th
+            class="px-6 py-4 text-left text-xs font-semibold text-zinc-500 uppercase tracking-wider w-12"
+          >
+            #
+          </th>
+          <th
+            class="px-6 py-4 text-left text-xs font-semibold text-zinc-500 uppercase tracking-wider"
+          >
+            Kapak
+          </th>
+          <th
+            class="px-6 py-4 text-left text-xs font-semibold text-zinc-500 uppercase tracking-wider"
+          >
+            Başlık
+          </th>
+          <th
+            class="px-6 py-4 text-left text-xs font-semibold text-zinc-500 uppercase tracking-wider"
+          >
+            Sanatçı
+          </th>
+          <th
+            class="px-6 py-4 text-left text-xs font-semibold text-zinc-500 uppercase tracking-wider"
+          >
+            Çıkış Tarihi
+          </th>
+          <th
+            class="px-6 py-4 text-right text-xs font-semibold text-zinc-500 uppercase tracking-wider"
+          >
+            İşlemler
+          </th>
+        </tr>
+      </thead>
+
+      <tbody>
+        @for (item of albums(); track item.albumId) {
+          <tr class="border-b border-white/5 hover:bg-white/5 transition-all duration-200 group">
+            <td class="px-6 py-4 text-sm text-zinc-500">{{ $index + 1 }}</td>
+
+            <td class="px-6 py-4">
+              <img
+                src="{{ item.coverImageUrl }}"
+                class="w-10 h-10 rounded-xl flex items-center justify-center"
+                alt="{{ item.title.charAt(0) }}"
+              />
+            </td>
+
+            <td class="px-6 py-4">
+              <p class="text-sm font-semibold text-white">{{ item.title }}</p>
+            </td>
+
+            <td class="px-6 py-4">
+              <p class="text-sm text-zinc-400">{{ item.artistName }}</p>
+            </td>
+
+            <td class="px-6 py-4">
+              <p class="text-sm text-zinc-400">{{ item.releaseDate | date: 'dd.MM.yyyy' }}</p>
+            </td>
+
+            <td class="px-6 py-4">
+              <div
+                class="flex items-center justify-end gap-2 opacity-0 group-hover:opacity-100 transition-opacity duration-200"
+              >
+                <a
+                  [routerLink]="['/admin/albums/update', item.albumId]"
+                  class="w-8 h-8 rounded-lg bg-white/5 hover:bg-blue-500/20 hover:text-blue-400 text-zinc-400 flex items-center justify-center transition-all duration-200"
+                >
+                  <span class="material-symbols-outlined text-sm">edit</span>
+                </a>
+                <button
+                  (click)="delete(item.albumId)"
+                  class="w-8 h-8 rounded-lg bg-white/5 hover:bg-red-500/20 hover:text-red-400 text-zinc-400 flex items-center justify-center transition-all duration-200"
+                >
+                  <span class="material-symbols-outlined text-sm">delete</span>
+                </button>
+              </div>
+            </td>
+          </tr>
+        }
+
+        @if (albums().length === 0) {
+          <tr>
+            <td colspan="6" class="px-6 py-16 text-center">
+              <span class="material-symbols-outlined text-4xl text-zinc-500 block mb-3">album</span>
+              <p class="text-sm text-zinc-500">Henüz albüm eklenmemiş</p>
+            </td>
+          </tr>
+        }
+      </tbody>
+    </table>
+  </div>
+</div>

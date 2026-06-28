@@ -1,0 +1,294 @@
+<div class="dashboard">
+
+  <!-- Loading -->
+  @if (!stats()) {
+    <div class="space-y-6">
+      <div class="skeleton-card h-48 rounded-3xl"></div>
+      <div class="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-5">
+        @for (i of [1, 2, 3, 4, 5, 6]; track i) {
+          <div class="skeleton-card h-40 rounded-2xl"></div>
+        }
+      </div>
+    </div>
+  }
+
+  @if (stats(); as stat) {
+
+    <!-- Hero -->
+    <section class="hero-banner relative overflow-hidden rounded-3xl border border-white/10 p-8 sm:p-10 mb-8">
+      <div class="hero-glow absolute inset-0 pointer-events-none"></div>
+      <div class="hero-grid absolute inset-0 pointer-events-none opacity-[0.04]"></div>
+
+      <div class="relative flex flex-col lg:flex-row lg:items-center lg:justify-between gap-8">
+        <div class="max-w-xl">
+          <div class="flex items-center gap-3 mb-4">
+            <span class="live-badge flex items-center gap-2 px-3 py-1 rounded-full bg-emerald-500/10 border border-emerald-500/25 text-emerald-400 text-xs font-medium">
+              <span class="live-dot w-1.5 h-1.5 rounded-full bg-emerald-400"></span>
+              Canlı Platform
+            </span>
+            <span class="text-xs text-zinc-500 capitalize">{{ today }}</span>
+          </div>
+
+          <h1 class="text-4xl sm:text-5xl font-bold text-white tracking-tight leading-[1.1]">
+            {{ greeting() }},<br />
+            <span class="hero-gradient-text">Admin</span>
+          </h1>
+
+          <p class="text-zinc-400 mt-4 text-base leading-relaxed max-w-md">
+            Rythm platformunun tüm metriklerini tek ekrandan yönet.
+            Kütüphanen {{ totalContent() }} içerik ve {{ stat.totalUsers }} kullanıcıyla aktif.
+          </p>
+
+          <div class="flex flex-wrap gap-3 mt-6">
+            <a routerLink="/admin/songs/create" class="hero-cta-primary inline-flex items-center gap-2 px-5 py-2.5 rounded-xl text-sm font-semibold text-white">
+              <span class="material-symbols-outlined text-base">add</span>
+              Hızlı Ekle
+            </a>
+            <a routerLink="/admin/songs" class="hero-cta-secondary inline-flex items-center gap-2 px-5 py-2.5 rounded-xl text-sm font-medium text-zinc-300 border border-white/10">
+              <span class="material-symbols-outlined text-base">explore</span>
+              Kütüphaneyi Keşfet
+            </a>
+          </div>
+        </div>
+
+        <!-- Hero Stats -->
+        <div class="flex flex-col sm:flex-row lg:flex-col gap-4 lg:min-w-[280px]">
+          <div class="hero-stat-card flex-1 p-6 rounded-2xl border border-white/10 bg-zinc-950/60">
+            <div class="flex items-center justify-between mb-3">
+              <span class="text-xs uppercase tracking-widest text-zinc-500">Toplam İçerik</span>
+              <span class="material-symbols-outlined text-indigo-400 text-lg">{{ greetingIcon() }}</span>
+            </div>
+            <p class="text-5xl font-bold text-white tabular-nums tracking-tight">{{ animatedTotal() }}</p>
+            <p class="text-xs text-zinc-500 mt-2">şarkı, albüm, sanatçı & daha fazlası</p>
+          </div>
+
+          <div class="hero-stat-card flex-1 p-6 rounded-2xl border border-white/10 bg-zinc-950/60">
+            <div class="flex items-center justify-between mb-3">
+              <span class="text-xs uppercase tracking-widest text-zinc-500">Platform Sağlığı</span>
+              <span class="text-xs font-semibold text-emerald-400">{{ healthLabel() }}</span>
+            </div>
+            <div class="flex items-end gap-3">
+              <p class="text-5xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-emerald-400 to-cyan-400 tabular-nums">%{{ animatedHealth() }}</p>
+              <div class="flex-1 mb-2">
+                <div class="h-2 rounded-full bg-white/5 overflow-hidden">
+                  <div class="health-bar h-full rounded-full bg-gradient-to-r from-emerald-500 to-cyan-500" [style.width.%]="animatedHealth()"></div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Featured Metrics -->
+    <section class="mb-5">
+      <div class="flex items-center justify-between mb-5">
+        <div>
+          <h2 class="text-xl font-bold text-white">Öne Çıkan Metrikler</h2>
+          <p class="text-sm text-zinc-500 mt-0.5">En kritik platform verileri</p>
+        </div>
+      </div>
+
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-5 mb-5">
+        @for (card of featuredCards(); track card.label; let i = $index) {
+          <a
+            [routerLink]="card.link"
+            class="featured-card group relative overflow-hidden rounded-2xl border border-white/10 bg-zinc-950/65 p-7 transition-all duration-500 hover:border-white/20 hover:-translate-y-1 {{ card.glow }}"
+            [style.animation-delay]="i * 80 + 'ms'"
+          >
+            <div class="card-shine absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-700 pointer-events-none"></div>
+            <div class="absolute inset-0 bg-gradient-to-br {{ card.gradient }}"></div>
+            <div class="absolute -right-6 -top-6 w-32 h-32 rounded-full bg-white/[0.03] blur-2xl group-hover:scale-150 transition-transform duration-700"></div>
+
+            <div class="relative flex items-start justify-between">
+              <div>
+                <p class="text-sm font-medium text-zinc-400">{{ card.label }}</p>
+                <p class="text-5xl font-bold text-white mt-3 tabular-nums tracking-tight">{{ card.value }}</p>
+                <div class="flex items-center gap-2 mt-4">
+                  <span class="text-xs px-2 py-0.5 rounded-md bg-white/5 text-zinc-400 border border-white/5">
+                    %{{ card.share }} pay
+                  </span>
+                  <span class="text-xs text-zinc-500">toplam içerikte</span>
+                </div>
+              </div>
+              <div class="w-14 h-14 rounded-2xl flex items-center justify-center border {{ card.iconBg }} ring-4 {{ card.ring }} transition-transform duration-500 group-hover:scale-110 group-hover:rotate-3">
+                <span class="material-symbols-outlined text-3xl" style="font-variation-settings: 'FILL' 1;">{{ card.icon }}</span>
+              </div>
+            </div>
+
+            <div class="relative mt-6 pt-4 border-t border-white/5 flex items-center justify-between">
+              <span class="text-xs text-zinc-500 group-hover:text-zinc-300 transition-colors">Detaylara git</span>
+              <span class="material-symbols-outlined text-zinc-600 text-sm group-hover:text-white group-hover:translate-x-1 transition-all">arrow_forward</span>
+            </div>
+          </a>
+        }
+      </div>
+
+      <!-- Secondary Metrics -->
+      <div class="grid grid-cols-2 lg:grid-cols-4 gap-4">
+        @for (card of secondaryCards(); track card.label; let i = $index) {
+          <a
+            [routerLink]="card.link"
+            class="stat-card group relative overflow-hidden rounded-2xl border border-white/10 bg-zinc-950/65 p-5 transition-all duration-300 hover:border-white/20 hover:-translate-y-0.5 {{ card.glow }}"
+            [style.animation-delay]="(i + 2) * 60 + 'ms'"
+          >
+            <div class="absolute top-0 left-0 w-full h-px bg-gradient-to-r {{ card.accentLine }}"></div>
+            <div class="absolute inset-0 bg-gradient-to-br {{ card.gradient }} opacity-50 group-hover:opacity-100 transition-opacity duration-500"></div>
+
+            <div class="relative">
+              <div class="flex items-center justify-between mb-3">
+                <div class="w-9 h-9 rounded-lg flex items-center justify-center border {{ card.iconBg }}">
+                  <span class="material-symbols-outlined text-lg" style="font-variation-settings: 'FILL' 1;">{{ card.icon }}</span>
+                </div>
+                <span class="text-[10px] font-medium text-zinc-600 tabular-nums">%{{ card.share }}</span>
+              </div>
+              <p class="text-2xl font-bold text-white tabular-nums">{{ card.value }}</p>
+              <p class="text-xs text-zinc-500 mt-1">{{ card.label }}</p>
+            </div>
+          </a>
+        }
+      </div>
+    </section>
+
+    <!-- Analytics + Actions -->
+    <div class="grid grid-cols-1 xl:grid-cols-12 gap-6 mb-6">
+
+      <!-- Donut + Breakdown -->
+      <section class="xl:col-span-7 dashboard-panel rounded-2xl border border-white/10 bg-zinc-950/65 p-7">
+        <div class="flex items-center justify-between mb-8">
+          <div>
+            <h2 class="text-lg font-bold text-white">İçerik Analizi</h2>
+            <p class="text-xs text-zinc-500 mt-0.5">Kütüphane dağılım haritası</p>
+          </div>
+          <span class="text-xs text-zinc-600 px-3 py-1 rounded-lg bg-white/[0.03] border border-white/5">{{ totalContent() }} toplam</span>
+        </div>
+
+        @if (contentBreakdown().length > 0) {
+          <div class="flex flex-col sm:flex-row items-center gap-8">
+            <!-- Donut Chart -->
+            <div class="donut-wrapper relative flex-shrink-0">
+              <svg viewBox="0 0 42 42" class="donut-chart w-44 h-44 -rotate-90">
+                <circle cx="21" cy="21" r="15.9155" fill="transparent" stroke="rgba(255,255,255,0.06)" stroke-width="3.2" />
+                @for (seg of donutSegments(); track seg.label) {
+                  <circle
+                    cx="21" cy="21" r="15.9155"
+                    fill="transparent"
+                    [attr.stroke]="seg.hex"
+                    stroke-width="3.2"
+                    stroke-linecap="round"
+                    [attr.stroke-dasharray]="seg.dash + ' ' + (seg.circumference - seg.dash)"
+                    [attr.stroke-dashoffset]="-seg.offset"
+                    class="donut-segment"
+                  />
+                }
+              </svg>
+              <div class="donut-center absolute inset-0 flex flex-col items-center justify-center">
+                <span class="text-3xl font-bold text-white tabular-nums">{{ totalContent() }}</span>
+                <span class="text-[10px] uppercase tracking-widest text-zinc-500 mt-0.5">içerik</span>
+              </div>
+            </div>
+
+            <!-- Breakdown List -->
+            <div class="flex-1 w-full space-y-4">
+              @for (item of contentBreakdown(); track item.label) {
+                <div class="breakdown-row group">
+                  <div class="flex items-center justify-between mb-1.5">
+                    <div class="flex items-center gap-2.5">
+                      <div class="w-2 h-2 rounded-full" [style.background-color]="item.hex"></div>
+                      <span class="text-sm text-zinc-400 group-hover:text-zinc-200 transition-colors">{{ item.label }}</span>
+                    </div>
+                    <div class="flex items-center gap-3">
+                      <span class="text-sm font-semibold text-white tabular-nums">{{ item.value }}</span>
+                      <span class="text-xs text-zinc-600 w-9 text-right tabular-nums">{{ item.pct | number:'1.0-0' }}%</span>
+                    </div>
+                  </div>
+                  <div class="h-1.5 rounded-full bg-white/[0.04] overflow-hidden">
+                    <div
+                      class="breakdown-bar h-full rounded-full transition-all duration-1000 ease-out"
+                      [style.width.%]="item.pct"
+                      [style.background-color]="item.hex"
+                    ></div>
+                  </div>
+                </div>
+              }
+            </div>
+          </div>
+        } @else {
+          <div class="flex flex-col items-center justify-center py-16 text-zinc-500">
+            <span class="material-symbols-outlined text-5xl mb-3 opacity-30">analytics</span>
+            <p class="text-sm">Henüz analiz edilecek içerik yok</p>
+          </div>
+        }
+      </section>
+
+      <!-- Quick Actions Grid -->
+      <section class="xl:col-span-5 dashboard-panel rounded-2xl border border-white/10 bg-zinc-950/65 p-7">
+        <div class="mb-6">
+          <h2 class="text-lg font-bold text-white">Hızlı İşlemler</h2>
+          <p class="text-xs text-zinc-500 mt-0.5">Tek tıkla yeni içerik oluştur</p>
+        </div>
+
+        <div class="grid grid-cols-2 gap-3">
+          @for (action of quickActions; track action.link; let i = $index) {
+            <a
+              [routerLink]="action.link"
+              class="quick-tile group relative overflow-hidden rounded-2xl border border-white/8 p-5 transition-all duration-300 hover:border-white/20 hover:-translate-y-1"
+              [style.animation-delay]="i * 70 + 'ms'"
+            >
+              <div class="absolute inset-0 bg-gradient-to-br {{ action.gradient }} opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
+              <div class="relative">
+                <div class="w-11 h-11 rounded-xl flex items-center justify-center border mb-4 {{ action.iconBg }} transition-transform duration-300 group-hover:scale-110">
+                  <span class="material-symbols-outlined text-xl {{ action.iconColor }}">{{ action.icon }}</span>
+                </div>
+                <p class="text-sm font-semibold text-white">{{ action.label }}</p>
+                <p class="text-[11px] text-zinc-500 mt-0.5">{{ action.description }}</p>
+              </div>
+              <span class="absolute top-4 right-4 material-symbols-outlined text-zinc-700 text-sm opacity-0 group-hover:opacity-100 group-hover:translate-x-0.5 transition-all">north_east</span>
+            </a>
+          }
+        </div>
+      </section>
+    </div>
+
+    <!-- Platform Modules -->
+    <section class="dashboard-panel rounded-2xl border border-white/10 bg-zinc-950/65 p-7">
+      <div class="flex items-center justify-between mb-6">
+        <div>
+          <h2 class="text-lg font-bold text-white">Modül Durumu</h2>
+          <p class="text-xs text-zinc-500 mt-0.5">Her modülün doluluk oranı</p>
+        </div>
+        <a routerLink="/admin/songs" class="text-xs text-indigo-400 hover:text-indigo-300 flex items-center gap-1 transition-colors">
+          Tümünü gör
+          <span class="material-symbols-outlined text-sm">arrow_forward</span>
+        </a>
+      </div>
+
+      <div class="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-4">
+        @for (mod of platformModules(); track mod.label; let i = $index) {
+          <a
+            [routerLink]="mod.link"
+            class="module-card group p-5 rounded-xl border border-white/5 bg-white/[0.02] hover:border-white/15 hover:bg-white/[0.04] transition-all duration-300"
+            [style.animation-delay]="i * 50 + 'ms'"
+          >
+            <div class="flex items-center gap-3 mb-4">
+              <span class="material-symbols-outlined text-xl {{ mod.color }}">{{ mod.icon }}</span>
+              <span class="text-sm font-medium text-zinc-300 group-hover:text-white transition-colors">{{ mod.label }}</span>
+            </div>
+            <div class="flex items-end justify-between mb-2">
+              <span class="text-2xl font-bold text-white tabular-nums">{{ mod.value }}</span>
+              <span class="text-xs text-zinc-600">%{{ moduleFill(mod.value, mod.max) }}</span>
+            </div>
+            <div class="h-1 rounded-full bg-white/[0.04] overflow-hidden">
+              <div
+                class="module-bar h-full rounded-full {{ mod.barColor }} transition-all duration-1000 ease-out"
+                [style.width.%]="moduleFill(mod.value, mod.max)"
+              ></div>
+            </div>
+          </a>
+        }
+      </div>
+    </section>
+
+  }
+
+</div>

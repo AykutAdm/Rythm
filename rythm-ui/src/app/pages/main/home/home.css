@@ -1,0 +1,22 @@
+.recommendations-scroll {
+  scroll-snap-type: x mandatory;
+  scrollbar-width: thin;
+  scrollbar-color: rgba(74, 222, 128, 0.35) transparent;
+}
+
+.recommendations-scroll::-webkit-scrollbar {
+  height: 6px;
+}
+
+.recommendations-scroll::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.recommendations-scroll::-webkit-scrollbar-thumb {
+  background: rgba(74, 222, 128, 0.35);
+  border-radius: 9999px;
+}
+
+.recommendation-card {
+  scroll-snap-align: start;
+}

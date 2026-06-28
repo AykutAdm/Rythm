@@ -1,0 +1,458 @@
+<div class="flex flex-col h-screen overflow-hidden text-white relative" (click)="closeDropdown()">
+  <!-- Shader Background -->
+  <canvas #shaderContainer class="absolute inset-0 w-full h-full z-0 opacity-90"></canvas>
+
+  <!-- İçerik -->
+  <div class="relative z-10 flex flex-col h-full">
+    <div class="flex flex-1 overflow-hidden gap-2 p-2">
+      <!-- Sol Sidebar -->
+      <div class="w-64 flex flex-col gap-2 shrink-0">
+        <!-- Logo -->
+        <div class="bg-black/60 backdrop-blur-xl rounded-2xl px-4 py-4 border border-white/5">
+          <div class="flex items-center gap-3">
+            <div
+              class="w-10 h-10 rounded-lg bg-blue-500/20 flex items-center justify-center border border-blue-500/30 flex-shrink-0"
+            >
+              <span class="material-symbols-outlined text-blue-400 text-xl">graphic_eq</span>
+            </div>
+            <div>
+              <h1 class="text-2xl font-bold text-blue-400 leading-none">Rythm</h1>
+              <span class="text-[10px] text-zinc-400 uppercase tracking-wider block mt-1"
+                >Premium Music</span
+              >
+            </div>
+          </div>
+        </div>
+
+        <!-- Ana Navigasyon -->
+        <div
+          class="bg-black/60 backdrop-blur-xl rounded-2xl p-3 flex flex-col gap-1 border border-white/5"
+        >
+          <a
+            routerLink="/home"
+            routerLinkActive="bg-white/10 text-white"
+            class="flex items-center gap-4 text-zinc-400 hover:text-white transition-all duration-200 font-semibold px-4 py-3 rounded-xl hover:bg-white/10 group"
+          >
+            <svg
+              class="w-5 h-5 group-hover:scale-110 transition-transform"
+              fill="currentColor"
+              viewBox="0 0 24 24"
+            >
+              <path d="M12 3l9 8h-3v9h-5v-5H11v5H6v-9H3z" />
+            </svg>
+            Ana Sayfa
+          </a>
+          <a
+            routerLink="/search"
+            routerLinkActive="bg-white/10 text-white"
+            class="flex items-center gap-4 text-zinc-400 hover:text-white transition-all duration-200 font-semibold px-4 py-3 rounded-xl hover:bg-white/10 group"
+          >
+            <svg
+              class="w-5 h-5 group-hover:scale-110 transition-transform"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
+              viewBox="0 0 24 24"
+            >
+              <circle cx="11" cy="11" r="7" />
+              <path stroke-linecap="round" d="M21 21l-4.35-4.35" />
+            </svg>
+            Ara
+          </a>
+        </div>
+
+        <!-- Kütüphane -->
+        <div
+          class="bg-black/60 backdrop-blur-xl rounded-2xl p-3 flex flex-col gap-1 flex-1 overflow-y-auto border border-white/5"
+        >
+          <div class="flex items-center justify-between px-4 py-2 mb-1">
+            <div class="flex items-center gap-2 text-zinc-400">
+              <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
+                <path
+                  d="M20 2H8c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zm-2 5h-3v5.5c0 1.38-1.12 2.5-2.5 2.5S10 13.88 10 12.5s1.12-2.5 2.5-2.5c.57 0 1.08.19 1.5.5V5h4v2zM4 6H2v14c0 1.1.9 2 2 2h14v-2H4V6z"
+                />
+              </svg>
+              <span class="font-semibold text-sm">Kütüphanem</span>
+            </div>
+            <button
+              (click)="openCreatePlaylist($event)"
+              class="text-zinc-400 hover:text-white transition p-1 rounded-full hover:bg-white/10"
+            >
+              <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
+                <path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z" />
+              </svg>
+            </button>
+          </div>
+
+          <!-- Playlist'ler -->
+          @for (playlist of playlists(); track playlist.playlistId) {
+            <a
+              [routerLink]="['/playlist', playlist.playlistId]"
+              routerLinkActive="bg-white/10"
+              class="flex items-center gap-3 px-3 py-2 rounded-xl hover:bg-white/10 transition-all duration-200 group"
+            >
+              <img
+                src="{{ playlist.coverImageUrl }}"
+                class="w-10 h-10 rounded-lg shrink-0 flex items-center justify-center shadow-lg group-hover:scale-105 transition-transform"
+                alt="playlis.title"
+              />
+              <div class="overflow-hidden">
+                <p class="text-sm font-semibold text-white truncate">{{ playlist.name }}</p>
+                <p class="text-xs text-zinc-500">Playlist</p>
+              </div>
+            </a>
+          }
+
+          <!-- Playlist Yok -->
+          @if (playlists().length === 0) {
+            <div class="px-4 py-8 text-center text-zinc-500">
+              <p class="text-xs">Henüz playlist yok</p>
+            </div>
+          }
+        </div>
+      </div>
+
+      <!-- Sağ Taraf -->
+      <div class="flex-1 flex flex-col gap-2 overflow-hidden">
+        <!-- Top Bar -->
+        <div
+          class="relative z-30 bg-black/60 backdrop-blur-xl rounded-2xl px-6 py-3 flex items-center justify-between shrink-0 border border-white/5"
+        >
+          <!-- Geri İleri -->
+          <div class="flex items-center gap-2"></div>
+
+          <!-- Sağ -->
+          <div class="relative flex items-center gap-3">
+            <!-- Premium Badge -->
+            @if (currentUser()?.roles?.includes('Premium')) {
+              <span
+                class="text-xs font-bold text-black bg-green-400 px-3 py-1 rounded-full shadow-lg shadow-green-400/20"
+              >
+                Premium
+              </span>
+            }
+
+            <!-- Rol -->
+            @if (currentUser()?.roles?.includes('Admin')) {
+              <span class="text-xs font-bold text-black bg-blue-400 px-3 py-1 rounded-full">
+                Admin
+              </span>
+            }
+
+            <!-- Profil Butonu -->
+            <button
+              (click)="toggleDropdown($event)"
+              class="w-9 h-9 rounded-full overflow-hidden hover:scale-105 transition-all duration-200 shadow-lg border-2 border-white/10"
+            >
+              @if (currentUser()?.profileImageUrl) {
+                <img
+                  src="{{ currentUser()?.profileImageUrl }}"
+                  class="w-full h-full object-cover"
+                  [alt]="currentUser()!.firstName"
+                />
+              } @else {
+                <div
+                  class="w-full h-full bg-gradient-to-br from-green-400 to-green-600 flex items-center justify-center text-black font-black text-sm"
+                >
+                  {{ currentUser()?.firstName?.charAt(0) || 'A' }}
+                </div>
+              }
+            </button>
+
+            <!-- Dropdown -->
+            <div
+              *ngIf="isDropdownOpen"
+              (click)="$event.stopPropagation()"
+              class="absolute right-0 top-12 w-52 bg-zinc-900/95 backdrop-blur-xl rounded-2xl shadow-2xl border border-white/10 overflow-hidden z-50 py-1"
+            >
+              <div class="px-4 py-3 border-b border-white/10">
+                <p class="text-sm font-semibold text-white">
+                  {{ currentUser()?.firstName }} {{ currentUser()?.lastName }}
+                </p>
+                <p class="text-xs text-zinc-500">{{ currentUser()?.email }}</p>
+                <div class="flex items-center gap-1 mt-2 flex-wrap">
+                  @for (role of currentUser()?.roles || []; track role) {
+                    <span
+                      class="text-xs font-bold text-black bg-green-400 px-2 py-0.5 rounded-full"
+                    >
+                      {{ role }}
+                    </span>
+                  }
+                </div>
+              </div>
+              <a
+                routerLink="/profile"
+                class="flex items-center gap-3 px-4 py-3 text-sm text-zinc-400 hover:bg-white/10 hover:text-white transition-all duration-200"
+              >
+                <span class="material-symbols-outlined text-sm">person</span>
+                Profilim
+              </a>
+              <div class="border-t border-white/10 my-1"></div>
+              <button
+                (click)="onLogout()"
+                class="w-full flex items-center gap-3 px-4 py-3 text-sm text-zinc-400 hover:bg-white/10 hover:text-white transition-all duration-200"
+              >
+                <span class="material-symbols-outlined text-sm">logout</span>
+                Çıkış Yap
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <!-- İçerik -->
+        <div
+          class="relative z-0 flex-1 bg-transparent rounded-2xl overflow-y-auto border border-white/5"
+        >
+          <router-outlet />
+        </div>
+      </div>
+    </div>
+
+    <!-- Müzik Çalar -->
+    <div
+      class="mx-2 mb-2 bg-black/60 backdrop-blur-xl rounded-2xl border border-white/5 flex items-center justify-between px-6 py-4 shrink-0"
+    >
+      <!-- Sol - Şarkı Bilgisi -->
+      <div class="flex items-center gap-4 w-64">
+        @if (audioService.currentSong()?.coverImageUrl) {
+          <img
+            src="{{ audioService.currentSong()?.coverImageUrl }}"
+            class="w-12 h-12 flex items-center justify-center"
+            alt="{{ audioService.currentSong()?.title }}"
+          />
+        } @else {
+          <div
+            class="w-12 h-12 bg-zinc-800 rounded-xl shrink-0 shadow-lg flex items-center justify-center"
+          >
+            <span class="material-symbols-outlined text-zinc-500">music_note</span>
+          </div>
+        }
+        <div>
+          <p class="text-sm font-semibold text-white truncate w-36">
+            {{ audioService.currentSong()?.title || 'Şarkı Adı' }}
+          </p>
+          <p class="text-xs text-zinc-500 truncate w-36">
+            {{ audioService.currentSong()?.artistName || 'Sanatçı' }}
+          </p>
+        </div>
+
+        <svg
+          (click)="likedSongsService.toggleLike(audioService.currentSong()!.songId)"
+          class="w-5 h-5 transition-all duration-200 cursor-pointer ml-2 shrink-0"
+          [class.text-green-400]="
+            likedSongsService.isLiked(audioService.currentSong()?.songId || 0)
+          "
+          [class.text-zinc-500]="
+            !likedSongsService.isLiked(audioService.currentSong()?.songId || 0)
+          "
+          fill="currentColor"
+          viewBox="0 0 24 24"
+        >
+          <path
+            d="M12 21.593c-5.63-5.539-11-10.297-11-14.402 0-3.791 3.068-5.191 5.281-5.191 1.312 0 4.151.501 5.719 4.457 1.59-3.968 4.464-4.447 5.726-4.447 2.54 0 5.274 1.621 5.274 5.181 0 4.069-5.136 8.625-11 14.402z"
+          />
+        </svg>
+      </div>
+
+      <!-- Orta - Kontroller -->
+      <div class="flex flex-col items-center gap-2">
+        <div class="flex items-center gap-6">
+          <button
+            class="text-zinc-500 hover:text-white transition-all duration-200 hover:scale-110"
+          >
+            <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
+              <path d="M6 6h2v12H6zm3.5 6l8.5 6V6z" />
+            </svg>
+          </button>
+          <button
+            (click)="audioService.togglePlay()"
+            class="bg-white text-black rounded-full w-10 h-10 flex items-center justify-center hover:scale-105 transition-all duration-200 shadow-lg shadow-white/20"
+          >
+            @if (audioService.isPlaying()) {
+              <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
+                <path d="M6 19h4V5H6v14zm8-14v14h4V5h-4z" />
+              </svg>
+            } @else {
+              <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
+                <path d="M8 5v14l11-7z" />
+              </svg>
+            }
+          </button>
+          <button
+            class="text-zinc-500 hover:text-white transition-all duration-200 hover:scale-110"
+          >
+            <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
+              <path d="M6 18l8.5-6L6 6v12zm2-8.14l4.5 3.14L8 16.14V9.86zM16 6h2v12h-2z" />
+            </svg>
+          </button>
+        </div>
+
+        <!-- Progress Bar -->
+        <div class="flex items-center gap-2">
+          <span class="text-xs text-zinc-500">{{
+            audioService.formatTime(audioService.currentTime())
+          }}</span>
+          <div
+            class="w-48 h-1 bg-zinc-700 rounded-full cursor-pointer group relative"
+            (click)="seek($event)"
+          >
+            <div
+              class="h-1 bg-green-400 rounded-full group-hover:bg-green-300 transition-colors"
+              [style.width.%]="
+                audioService.duration()
+                  ? (audioService.currentTime() / audioService.duration()) * 100
+                  : 0
+              "
+            ></div>
+          </div>
+          <span class="text-xs text-zinc-500">{{
+            audioService.formatTime(audioService.duration())
+          }}</span>
+        </div>
+      </div>
+
+      <!-- Sağ - Ses -->
+      <div class="flex items-center gap-2 w-64 justify-end">
+        <svg
+          class="w-5 h-5 text-zinc-500 hover:text-white transition-all duration-200 cursor-pointer"
+          fill="currentColor"
+          viewBox="0 0 24 24"
+        >
+          <path
+            d="M3 9v6h4l5 5V4L7 9H3zm13.5 3c0-1.77-1.02-3.29-2.5-4.03v8.05c1.48-.73 2.5-2.25 2.5-4.02z"
+          />
+        </svg>
+        <input
+          type="range"
+          min="0"
+          max="1"
+          step="0.01"
+          [value]="audioService.volume()"
+          (input)="audioService.setVolume(+$any($event.target).value)"
+          class="w-24 h-1 bg-zinc-700 rounded-full cursor-pointer accent-green-400"
+        />
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Playlist Oluştur Modal -->
+@if (isCreatePlaylistOpen()) {
+  <div class="fixed inset-0 z-50 flex items-center justify-center" (click)="closeCreatePlaylist()">
+    <!-- Overlay -->
+    <div class="absolute inset-0 bg-black/60 backdrop-blur-sm"></div>
+
+    <!-- Modal -->
+    <div
+      class="relative z-10 w-full max-w-md bg-zinc-900 rounded-2xl border border-white/10 p-6 space-y-5 shadow-2xl"
+      (click)="$event.stopPropagation()"
+    >
+      <div class="flex items-center justify-between">
+        <h3 class="text-lg font-bold text-white">Playlist Oluştur</h3>
+        <button (click)="closeCreatePlaylist()" class="text-zinc-400 hover:text-white transition">
+          <span class="material-symbols-outlined">close</span>
+        </button>
+      </div>
+
+      <div class="space-y-4">
+        <div class="space-y-2">
+          <label class="text-sm font-medium text-zinc-400"
+            >İsim <span class="text-red-400">*</span></label
+          >
+          <input
+            type="text"
+            [(ngModel)]="playlistModel.name"
+            placeholder="Playlist adı"
+            class="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-sm text-white placeholder:text-zinc-600 focus:outline-none focus:border-green-500 transition-colors"
+          />
+        </div>
+
+        <div class="space-y-2">
+          <label class="text-sm font-medium text-zinc-400"
+            >Görsel <span class="text-red-400">*</span></label
+          >
+          <input
+            type="text"
+            [(ngModel)]="playlistModel.coverImageUrl"
+            placeholder="Playlist kapak resmi"
+            class="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-sm text-white placeholder:text-zinc-600 focus:outline-none focus:border-green-500 transition-colors"
+          />
+        </div>
+
+        <div class="space-y-2">
+          <label class="text-sm font-medium text-zinc-400">Açıklama</label>
+          <input
+            type="text"
+            [(ngModel)]="playlistModel.description"
+            placeholder="Açıklama"
+            class="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-sm text-white placeholder:text-zinc-600 focus:outline-none focus:border-green-500 transition-colors"
+          />
+        </div>
+
+        <div class="flex items-center gap-3">
+          <input
+            type="checkbox"
+            [(ngModel)]="playlistModel.isPublic"
+            id="isPublic"
+            class="w-4 h-4 accent-green-400"
+          />
+          <label for="isPublic" class="text-sm text-zinc-400">Herkese açık</label>
+        </div>
+      </div>
+
+      <div class="flex items-center justify-end gap-3">
+        <button
+          (click)="closeCreatePlaylist()"
+          class="px-5 py-2.5 bg-white/5 hover:bg-white/10 text-zinc-400 hover:text-white text-sm font-semibold rounded-xl transition-all duration-200"
+        >
+          İptal
+        </button>
+        <button
+          (click)="createPlaylist()"
+          class="flex items-center gap-2 px-5 py-2.5 bg-green-500 hover:bg-green-400 text-black text-sm font-semibold rounded-xl transition-all duration-200"
+        >
+          <span class="material-symbols-outlined text-sm">add</span>
+          Oluştur
+        </button>
+      </div>
+    </div>
+  </div>
+}
+
+<!-- Premium Uyarı Modal -->
+@if (audioService.showPremiumAlert()) {
+  <div
+    class="fixed inset-0 z-50 flex items-center justify-center"
+    (click)="audioService.showPremiumAlert.set(false)"
+  >
+    <div class="absolute inset-0 bg-black/60 backdrop-blur-sm"></div>
+
+    <div
+      class="relative z-10 w-full max-w-sm bg-zinc-900 rounded-2xl border border-white/10 p-8 space-y-6 shadow-2xl text-center"
+      (click)="$event.stopPropagation()"
+    >
+      <div class="w-16 h-16 bg-green-400/20 rounded-full flex items-center justify-center mx-auto">
+        <span class="material-symbols-outlined text-green-400 text-3xl">workspace_premium</span>
+      </div>
+
+      <div class="space-y-2">
+        <h3 class="text-xl font-bold text-white">Premium Gerekli</h3>
+        <p class="text-sm text-zinc-400">Bu şarkıyı dinlemek için Premium üyeliğe ihtiyacın var.</p>
+      </div>
+
+      <div class="flex items-center justify-center gap-3">
+        <button
+          (click)="audioService.showPremiumAlert.set(false)"
+          class="px-5 py-2.5 bg-white/5 hover:bg-white/10 text-zinc-400 hover:text-white text-sm font-semibold rounded-xl transition-all duration-200"
+        >
+          İptal
+        </button>
+        <button
+          class="px-5 py-2.5 bg-green-500 hover:bg-green-400 text-black text-sm font-semibold rounded-xl transition-all duration-200"
+        >
+          Premium'a Yükselt
+        </button>
+      </div>
+    </div>
+  </div>
+}
