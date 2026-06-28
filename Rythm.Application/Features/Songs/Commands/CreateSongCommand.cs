@@ -17,5 +17,6 @@ namespace Rythm.Application.Features.Songs.Commands
         public int ArtistId { get; set; }
         public int? AlbumId { get; set; }
         public int? GenreId { get; set; }
+        public string RequiredPlan { get; set; }
     }
 }

@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Rythm.Persistence.Context;
 
@@ -11,9 +12,11 @@ using Rythm.Persistence.Context;
 namespace Rythm.Persistence.Migrations
 {
     [DbContext(typeof(RythmDbContext))]
-    partial class RythmDbContextModelSnapshot : ModelSnapshot
+    [Migration("20260628120838_mig_add_song_plan")]
+    partial class mig_add_song_plan
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -321,30 +324,6 @@ namespace Rythm.Persistence.Migrations
                     b.ToTable("Genres");
                 });
 
-            modelBuilder.Entity("Rythm.Domain.Entities.ListeningHistory", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<int>("AppUserId")
-                        .HasColumnType("int");
-
-                    b.Property<DateTime>("ListenedAt")
-                        .HasColumnType("datetime2");
-
-                    b.Property<int>("SongId")
-                        .HasColumnType("int");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("SongId");
-
-                    b.ToTable("ListeningHistories");
-                });
-
             modelBuilder.Entity("Rythm.Domain.Entities.Playlist", b =>
                 {
                     b.Property<int>("PlaylistId")
@@ -558,17 +537,6 @@ namespace Rythm.Persistence.Migrations
                     b.HasOne("Rythm.Domain.Entities.AppUser", null)
                         .WithOne("Artist")
                         .HasForeignKey("Rythm.Domain.Entities.Artist", "AppUserId");
-                });
-
-            modelBuilder.Entity("Rythm.Domain.Entities.ListeningHistory", b =>
-                {
-                    b.HasOne("Rythm.Domain.Entities.Song", "Song")
-                        .WithMany()
-                        .HasForeignKey("SongId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Song");
                 });
 
             modelBuilder.Entity("Rythm.Domain.Entities.Playlist", b =>

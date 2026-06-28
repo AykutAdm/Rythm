@@ -16,6 +16,7 @@ namespace Rythm.Domain.Entities
         public int PlayCount { get; set; }
         public DateTime ReleaseDate { get; set; }
         public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
+        public string RequiredPlan { get; set; } = "Free";
 
         public int ArtistId { get; set; }
         public Artist Artist { get; set; }

@@ -15,6 +15,7 @@ namespace Rythm.Application.Interfaces
         IGenreRepository Genres { get; }
         IPlaylistRepository Playlists { get; }
         IUserLikedSongRepository LikedSongs { get; }
+        IListeningHistoryRepository ListeningHistories { get; }
 
         Task<int> SaveChangesAsync();
     }

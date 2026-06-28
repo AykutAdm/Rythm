@@ -25,6 +25,7 @@ namespace Rythm.Persistence.Context
         public DbSet<PlaylistSong> PlaylistSongs { get; set; }
         public DbSet<UserLikedSong> UserLikedSongs { get; set; }
         public DbSet<UserFollowArtist> UserFollowArtists { get; set; }
+        public DbSet<ListeningHistory> ListeningHistories { get; set; }
 
         protected override void OnModelCreating(ModelBuilder builder)
         {

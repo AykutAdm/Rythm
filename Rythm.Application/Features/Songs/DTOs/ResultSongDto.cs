@@ -18,5 +18,6 @@ namespace Rythm.Application.Features.Songs.DTOs
         public string ArtistName { get; set; }
         public string? AlbumTitle { get; set; }
         public string? GenreName { get; set; }
+        public string RequiredPlan { get; set; }
     }
 }

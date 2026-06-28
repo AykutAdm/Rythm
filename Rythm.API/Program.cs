@@ -10,6 +10,7 @@ using Rythm.Application.Mappings;
 using Rythm.Domain.Entities;
 using Rythm.Infrastructure.Auth;
 using Rythm.Infrastructure.Cache;
+using Rythm.Infrastructure.Recommendation;
 using Rythm.Infrastructure.Search;
 using Rythm.Infrastructure.Storage;
 using Rythm.Persistence.Context;
@@ -73,7 +74,7 @@ builder.Services.AddAuthentication(options =>
     };
 });
 
-// Redis baðlantýsý
+// Redis baÃ°lantÃ½sÃ½
 builder.Services.AddSingleton<IConnectionMultiplexer>(ConnectionMultiplexer.Connect(builder.Configuration["RedisSettings:ConnectionString"]!));
 
 builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
@@ -81,6 +82,7 @@ builder.Services.AddScoped<IJwtService, JwtService>();
 builder.Services.AddScoped<IFileStorageService, LocalFileStorageService>();
 builder.Services.AddScoped<ICacheService, RedisCacheService>();
 builder.Services.AddScoped<ISearchService, ElasticsearchService>();
+builder.Services.AddScoped<IRecommendationService, MlNetRecommendationService>();
 
 builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle

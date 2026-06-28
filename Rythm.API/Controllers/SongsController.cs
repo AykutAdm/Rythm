@@ -64,5 +64,20 @@ namespace Rythm.API.Controllers
             var result = await _mediator.Send(new SearchSongsQuery(query));
             return Ok(result);
         }
+
+        [HttpGet("{id}/check-access")]
+        [Authorize]
+        public async Task<IActionResult> CheckAccess(int id)
+        {
+            var song = await _mediator.Send(new GetSongByIdQuery(id));
+
+            if (song.RequiredPlan == "Free")
+            {
+                return Ok(new { hasAccess = true });
+            }
+
+            var isPremium = User.IsInRole("Premium");
+            return Ok(new { hasAccess = isPremium });
+        }
     }
 }
