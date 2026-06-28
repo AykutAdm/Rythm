@@ -3,8 +3,7 @@
 > A modern music streaming platform built with **ASP.NET Core (.NET 8)** and **Angular 21**, following **Clean Architecture** and **CQRS** principles.
 
 <p align="center">
-  <video src="docs/home.mp4" width="800" autoplay loop muted playsinline></video>
-  ![Demo](./docs/home.mp4)
+  <img src="docs/home.gif" alt="Home" />
 </p>
 
 ---
@@ -248,34 +247,18 @@ SQL Fallback (Most Played Artists)
 
 # 📸 Screenshots
 
+## 👤 Login / Register
+
+<p align="center">
+  <img src="docs/login.gif" alt="Search" />
+</p>
+
+---
+
 ## 🏠 Home
 
 <p align="center">
   <img src="docs/home.gif" alt="Home" />
-</p>
-
----
-
-## 🔍 Search
-
-<p align="center">
-  <img src="docs/search.gif" alt="Search" />
-</p>
-
----
-
-## 🎤 Artist
-
-<p align="center">
-  <img src="docs/artist.gif" alt="Artist" />
-</p>
-
----
-
-## 📂 Playlist
-
-<p align="center">
-  <img src="docs/playlist.gif" alt="Playlist" />
 </p>
 
 ---
